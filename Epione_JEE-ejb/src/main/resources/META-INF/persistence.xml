@@ -3,7 +3,7 @@
 	<persistence-unit name="Epione_JEE-ejb">
 		<jta-data-source>java:/Epione_JEE</jta-data-source>
 		<properties>
-			<property name="hibernate.hbm2ddl.auto" value="create" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
