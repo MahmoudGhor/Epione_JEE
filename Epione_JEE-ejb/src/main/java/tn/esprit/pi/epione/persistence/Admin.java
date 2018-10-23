@@ -5,6 +5,6 @@ import javax.persistence.Entity;
 @Entity
 public class Admin extends User {
 	
-	//Updated malik
+	//Updated malik 1
 
 }
