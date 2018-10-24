@@ -1,8 +1,10 @@
 package tn.esprit.pi.epione.resources;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -15,19 +17,19 @@ import tn.esprit.pi.epione.persistence.User;
 
 @Path("/medecin")
 public class MedecinClient {
-	@Inject
+	@EJB
 	UserServiceLocal userManager;
 
 	
 	/******************************** add pattern **********************************************/
-	@Path("/addPattern")
+	@Path("/addPattern/{medecin}/{pattern}/{price}/{periode}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addPattern (
-			@QueryParam("medecin") int medecin,
-			@QueryParam("pattern") String pattern,
-			@QueryParam("price") int price,
-			@QueryParam("periode") int periode
+			@PathParam("medecin") int medecin,
+			@PathParam("pattern") String pattern,
+			@PathParam("price") int price,
+			@PathParam("periode") int periode
 			)
 	{
 	
@@ -37,7 +39,7 @@ public class MedecinClient {
 		patterns.setDoctor(x);
 		patterns.setLabel(pattern);
 		patterns.setPrice(price);
-		return Response.ok(userManager.AddPattern(x,pattern,price,periode)).build();
+		return Response.ok(userManager.addPattern(x,pattern,price,periode)).build();
 		
 		
 	}
