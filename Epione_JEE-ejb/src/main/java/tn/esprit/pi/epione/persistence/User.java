@@ -28,6 +28,8 @@ public class User {
 	private String email;
 	@Embedded
 	private Adresse adresse;
+	private String ville;
+	
 	private Sexe sexe;
 	private String civil_status;
 	private String password;
@@ -127,6 +129,12 @@ public class User {
 	}
 	public void setListPatterns(List<Pattern> listPatterns) {
 		this.listPatterns = listPatterns;
+	}
+	public String getVille() {
+		return ville;
+	}
+	public void setVille(String ville) {
+		this.ville = ville;
 	}
 	
 	
