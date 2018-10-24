@@ -1,6 +1,7 @@
 package tn.esprit.pi.epione.persistence;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Embedded;
@@ -8,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -18,6 +20,7 @@ public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
+	private String username;
 	private String firstname;
 	private String lastname;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -32,6 +35,8 @@ public class User {
 	private String phone;
 	private Date created_at;
 	private boolean active;
+	@OneToMany(mappedBy="doctor")
+	private List<Pattern> listPatterns;
 	
 	public int getId() {
 		return id;
@@ -111,5 +116,19 @@ public class User {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public List<Pattern> getListPatterns() {
+		return listPatterns;
+	}
+	public void setListPatterns(List<Pattern> listPatterns) {
+		this.listPatterns = listPatterns;
+	}
+	
+	
 
 }
