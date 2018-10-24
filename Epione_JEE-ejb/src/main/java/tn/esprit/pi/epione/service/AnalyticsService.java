@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.print.Doc;
 
@@ -15,18 +16,19 @@ import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Speciality;
 
 @Stateless
-public class AnalyticsService implements AnalyticsServiceLocal {
-	EntityManager em;
 
+public class AnalyticsService implements AnalyticsServiceLocal {
+    @PersistenceContext(unitName = "Epione_JEE-ejb")
+	EntityManager em;
+	
 	
 	
 	/*   Get (count) treated patients */
 	@Override
-	public int countTreatedPatients() {
-		int result=(int) em.createQuery(
+	public long countTreatedPatients() {
+		long result= (long) em.createQuery(
 				  "SELECT DISTINCT count(idPatient) from Appointment where date < CURDATE()").getSingleResult();
-		
-		return result;
+	return result;
 	}
 
 

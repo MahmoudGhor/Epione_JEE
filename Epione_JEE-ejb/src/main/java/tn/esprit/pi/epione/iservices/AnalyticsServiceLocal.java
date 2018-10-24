@@ -9,10 +9,10 @@ import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Speciality;
 
-@Local
+
 public interface AnalyticsServiceLocal {
 
-	public int countTreatedPatients();
+	public long countTreatedPatients();
 	public int countCanceledAppointments();
 
 	public int countAppointmentsbyDoctor(Doctor d);
