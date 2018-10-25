@@ -3,20 +3,30 @@ package tn.esprit.pi.epione.persistence;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Doctor extends User {
 	
+	@Enumerated(EnumType.STRING)
 	private Speciality speciality;
+	
 	private String biography;
 	private String Office_Number;
 	private String Website;
 	private boolean cnam;
-	@OneToMany(mappedBy="doctor")
+	@JsonIgnore
+	@OneToMany(mappedBy="doctor", fetch=FetchType.EAGER)
 	private List<Appointment> appointments;
+	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<Pattern> patterns;
+	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<Planning> plannings;
 	

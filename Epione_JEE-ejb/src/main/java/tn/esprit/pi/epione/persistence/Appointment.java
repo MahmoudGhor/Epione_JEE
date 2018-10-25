@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Appointment {
 	
@@ -34,10 +36,12 @@ public class Appointment {
 	@ManyToOne
 	@JoinColumn(name="idPatient",referencedColumnName="id",insertable=false, updatable=false)
 	private Patient patient;
+	@JsonIgnore
 	@OneToMany(mappedBy="appointment")
 	private List<Recommandation> recommandations; 
 	@ManyToOne
 	private Pattern pattern;
+	@JsonIgnore
 	@OneToOne
 	private Planning planning;
 	
