@@ -28,7 +28,7 @@ public interface AnalyticsServiceLocal {
 
 	public List<Doctor> getDoctorsByRegion(String region); // done
 	
-	public List<Appointment> getAppointmentsByDoctor(int doc_id); 
+	public List<Appointment> getAppointmentsByDoctor(int doc_id); // done
 
 	public List<Doctor> getDoctorsBySpecialities(Speciality speciality); // done
 	

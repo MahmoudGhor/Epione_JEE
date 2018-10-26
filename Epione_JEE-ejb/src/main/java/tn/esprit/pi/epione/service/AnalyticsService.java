@@ -25,8 +25,8 @@ import tn.esprit.pi.epione.persistence.User;
 
 @Stateless
 
-public class AnalyticsService  implements AnalyticsServiceLocal {
-	@PersistenceContext(unitName = "Epione_JEE-ejb"/*, type=PersistenceContextType.EXTENDED*/)
+public class AnalyticsService implements AnalyticsServiceLocal {
+	@PersistenceContext(unitName = "Epione_JEE-ejb"/* , type=PersistenceContextType.EXTENDED */)
 	EntityManager em;
 
 	/* Get (count) treated patients */
@@ -45,6 +45,7 @@ public class AnalyticsService  implements AnalyticsServiceLocal {
 		return result;
 	}
 
+	/* count appointments by doctor */
 	@Override
 	public int countAppointmentsbyDoctor(Doctor d) {
 		int result = (int) em.createQuery("SELECT count(a) from Appointment a WHERE a.idDoctor = :id")
@@ -53,6 +54,7 @@ public class AnalyticsService  implements AnalyticsServiceLocal {
 		return result;
 	}
 
+	/* count appointments by patient */
 	@Override
 	public int countAppointmentsbyPatient(Patient p) {
 		int result = (int) em.createQuery("SELECT count(a) from Appointment a WHERE a.id = :id")
@@ -61,6 +63,7 @@ public class AnalyticsService  implements AnalyticsServiceLocal {
 		return result;
 	}
 
+	/* get doctors by region */
 	@Override
 	public List<Doctor> getDoctorsByRegion(String region) {
 		TypedQuery<Doctor> query = em.createQuery("select d from Doctor d where d.ville=?1", Doctor.class);
@@ -68,6 +71,7 @@ public class AnalyticsService  implements AnalyticsServiceLocal {
 		return query.getResultList();
 	}
 
+	/* get all doctors by speciality */
 	@Override
 	public List<Doctor> getDoctorsBySpecialities(Speciality speciality) {
 		TypedQuery<Doctor> query = em.createQuery("select u from Doctor u where u.speciality=?1 ", Doctor.class);
@@ -96,9 +100,11 @@ public class AnalyticsService  implements AnalyticsServiceLocal {
 		return q.getResultList();
 	}
 
+	/* Get all appointments by doctor */
 	@Override
 	public List<Appointment> getAppointmentsByDoctor(int doc_id) {
-		TypedQuery<Appointment> query = em.createQuery("select d from Appointment d where d.doctor.id=?1", Appointment.class);
+		TypedQuery<Appointment> query = em.createQuery("select d from Appointment d where d.doctor.id=?1",
+				Appointment.class);
 		query.setParameter(1, doc_id);
 		return query.getResultList();
 	}

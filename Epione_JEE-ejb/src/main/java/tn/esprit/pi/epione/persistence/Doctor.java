@@ -1,5 +1,6 @@
 package tn.esprit.pi.epione.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -16,10 +17,14 @@ public class Doctor extends User {
 	@Enumerated(EnumType.STRING)
 	private Speciality speciality;
 	
+	private String PaymentMethod;
 	private String biography;
 	private String Office_Number;
 	private String Website;
 	private boolean cnam;
+	@JsonIgnore
+	@OneToMany(mappedBy="doctor")
+	private List<DoctorFormation> formations = new ArrayList<>();
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor", fetch=FetchType.EAGER)
 	private List<Appointment> appointments;
@@ -77,6 +82,12 @@ public class Doctor extends User {
 	}
 	public void setPlannings(List<Planning> plannings) {
 		this.plannings = plannings;
+	}
+	public String getPaymentMethod() {
+		return PaymentMethod;
+	}
+	public void setPaymentMethod(String paymentMethod) {
+		PaymentMethod = paymentMethod;
 	}
  
 }

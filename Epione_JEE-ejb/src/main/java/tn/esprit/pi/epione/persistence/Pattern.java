@@ -62,6 +62,12 @@ public class Pattern {
 		this.doctor = doctor;
 		this.isActif = true;
 	}
+	public Pattern(String label, Doctor doctor) {
+		super();
+		this.label = label;
+		this.doctor = doctor;
+		this.isActif = true;
+	}
 	public Pattern() {
 		super();
 	}
