@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Entity implementation class for Entity: DoctorFormation
  *
@@ -14,12 +16,12 @@ import javax.persistence.*;
 public class DoctorFormation implements Serializable {
 
 	
-	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	private String date;
 	private String diplome;
+	@JsonIgnore
 	@ManyToOne
 	private Doctor doctor;
 

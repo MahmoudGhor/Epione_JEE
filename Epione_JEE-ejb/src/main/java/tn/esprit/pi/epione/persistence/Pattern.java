@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Pattern {
 	
@@ -15,6 +17,7 @@ public class Pattern {
 	private float price;
 	private String label;
 	private int periode;
+	@JsonIgnore
 	@ManyToOne
 	private Doctor doctor;
 	private boolean isActif ;

@@ -8,32 +8,35 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Doctor extends User {
 	
-	@Enumerated(EnumType.STRING)
+	@OneToOne
 	private Speciality speciality;
 	
 	private String PaymentMethod;
 	private String biography;
 	private String Office_Number;
 	private String Website;
+	private String OfficeAdress;
+	
 	private boolean cnam;
-	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<DoctorFormation> formations = new ArrayList<>();
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor", fetch=FetchType.EAGER)
 	private List<Appointment> appointments;
-	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<Pattern> patterns;
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<Planning> plannings;
+	
+	
 	
 	public Speciality getSpeciality() {
 		return speciality;
@@ -88,6 +91,18 @@ public class Doctor extends User {
 	}
 	public void setPaymentMethod(String paymentMethod) {
 		PaymentMethod = paymentMethod;
+	}
+	public List<DoctorFormation> getFormations() {
+		return formations;
+	}
+	public void setFormations(List<DoctorFormation> formations) {
+		this.formations = formations;
+	}
+	public String getOfficeAdress() {
+		return OfficeAdress;
+	}
+	public void setOfficeAdress(String officeAdress) {
+		OfficeAdress = officeAdress;
 	}
  
 }

@@ -26,7 +26,7 @@ public class DoctolibClient {
 	@Path("/doc")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getDoctors() {
+	public Doctor getDoctors() {
 
 		return D.get();
 	}
