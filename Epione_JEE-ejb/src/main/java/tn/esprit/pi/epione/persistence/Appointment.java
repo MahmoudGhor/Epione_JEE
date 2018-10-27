@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,7 +26,8 @@ public class Appointment {
 	private int id;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
-	private boolean status;
+	@Enumerated(EnumType.STRING)
+	private Status status;
 	private String description;
 	@OneToOne
 	private Medical_Prescription medical_Prescription;
@@ -57,10 +60,11 @@ public class Appointment {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public boolean isStatus() {
+	
+	public Status getStatus() {
 		return status;
 	}
-	public void setStatus(boolean status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 	public Medical_Prescription getMedical_Prescription() {
@@ -111,6 +115,8 @@ public class Appointment {
 	public void setPlanning(Planning planning) {
 		this.planning = planning;
 	}
+	
+	
 	
 
 }
