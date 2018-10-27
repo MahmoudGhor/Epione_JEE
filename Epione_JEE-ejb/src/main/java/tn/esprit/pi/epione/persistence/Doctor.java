@@ -24,7 +24,7 @@ public class Doctor extends User {
 	private String Website;
 	private String OfficeAdress;
 	
-	private boolean cnam;
+	private String Remboursement;
 	@OneToMany(mappedBy="doctor")
 	private List<DoctorFormation> formations = new ArrayList<>();
 	@JsonIgnore
@@ -62,12 +62,7 @@ public class Doctor extends User {
 	public void setWebsite(String website) {
 		Website = website;
 	}
-	public boolean isCnam() {
-		return cnam;
-	}
-	public void setCnam(boolean cnam) {
-		this.cnam = cnam;
-	}
+	
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}
@@ -103,6 +98,12 @@ public class Doctor extends User {
 	}
 	public void setOfficeAdress(String officeAdress) {
 		OfficeAdress = officeAdress;
+	}
+	public String getRemboursement() {
+		return Remboursement;
+	}
+	public void setRemboursement(String remboursement) {
+		Remboursement = remboursement;
 	}
  
 }
