@@ -42,6 +42,10 @@ public class User {
 	@JsonIgnore
 	@OneToMany(mappedBy = "doctor")
 	private List<Pattern> listPatterns;
+	private String token;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastConnect;
+	private Boolean connected;
 
 	public int getId() {
 		return id;
@@ -170,5 +174,31 @@ public class User {
 	public void setVille(String ville) {
 		this.ville = ville;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public Date getLastConnect() {
+		return lastConnect;
+	}
+
+	public void setLastConnect(Date lastConnect) {
+		this.lastConnect = lastConnect;
+	}
+
+	public Boolean getConnected() {
+		return connected;
+	}
+
+	public void setConnected(Boolean connected) {
+		this.connected = connected;
+	}
+	
+	
 
 }
