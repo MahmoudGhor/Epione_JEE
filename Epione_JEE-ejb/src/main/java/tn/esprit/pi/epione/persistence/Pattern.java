@@ -1,10 +1,13 @@
 package tn.esprit.pi.epione.persistence;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Pattern {
@@ -15,7 +18,7 @@ public class Pattern {
 	private float price;
 	private String label;
 	private int periode;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Doctor doctor;
 	private boolean isActif ;
 	public int getId() {
