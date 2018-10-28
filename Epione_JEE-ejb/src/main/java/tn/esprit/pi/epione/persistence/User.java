@@ -3,9 +3,11 @@ package tn.esprit.pi.epione.persistence;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +27,7 @@ public class User {
 	private String username;
 	private String firstname;
 	private String lastname;
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date birthday;
 	private String email;
 	@Embedded
@@ -40,10 +42,10 @@ public class User {
 	private Date created_at;
 	private boolean active;
 	@JsonIgnore
-	@OneToMany(mappedBy = "doctor")
+	@OneToMany(mappedBy = "doctor" , fetch= FetchType.LAZY)
 	private List<Pattern> listPatterns;
 	private String token;
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date lastConnect;
 	private Boolean connected;
 

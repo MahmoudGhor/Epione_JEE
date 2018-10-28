@@ -26,10 +26,10 @@ public class Doctor extends User {
 	@OneToMany(mappedBy="doctor")
 	private List<DoctorFormation> formations = new ArrayList<>();
 	@JsonIgnore
-	@OneToMany(mappedBy="doctor", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
 	private List<Appointment> appointments;
 	@JsonIgnore
-	@OneToMany(mappedBy="doctor")
+	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
 	private List<Pattern> patterns;
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
