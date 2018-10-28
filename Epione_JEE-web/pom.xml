@@ -28,6 +28,7 @@
 			<type>ejb</type>
 			<scope>provided</scope>
 		</dependency>
+	
 	</dependencies>
 
 	<build>

@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,31 +17,39 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Appointment {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date date;
-	private boolean status;
+	@Enumerated(EnumType.STRING)
+	private Status status;
 	private String description;
-	@OneToOne
+	@OneToOne(fetch= FetchType.EAGER)
 	private Medical_Prescription medical_Prescription;
-	@OneToOne
+	@OneToOne(fetch= FetchType.EAGER)
 	private Rating rating;
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne(fetch= FetchType.EAGER)
 	@JoinColumn(name="idDoctor",referencedColumnName="id",insertable=false, updatable=false)
 	private Doctor doctor;
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne(fetch= FetchType.EAGER)
 	@JoinColumn(name="idPatient",referencedColumnName="id",insertable=false, updatable=false)
 	private Patient patient;
+	@JsonIgnore
 	@OneToMany(mappedBy="appointment")
-	private List<Recommandation> recommandations; 
-	@ManyToOne
+	private List<Recommandation> recommandations;
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Pattern pattern;
-	@OneToOne
+	@JsonIgnore
+	@OneToOne(fetch = FetchType.EAGER)
 	private Planning planning;
 	
 	public int getId() {
@@ -53,10 +64,11 @@ public class Appointment {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public boolean isStatus() {
+	
+	public Status getStatus() {
 		return status;
 	}
-	public void setStatus(boolean status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 	public Medical_Prescription getMedical_Prescription() {
@@ -107,6 +119,8 @@ public class Appointment {
 	public void setPlanning(Planning planning) {
 		this.planning = planning;
 	}
+	
+	
 	
 
 }

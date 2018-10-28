@@ -1,22 +1,37 @@
 package tn.esprit.pi.epione.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Doctor extends User {
 	
+	@Enumerated(EnumType.STRING)
 	private Speciality speciality;
+	
+	private String PaymentMethod;
 	private String biography;
 	private String Office_Number;
 	private String Website;
 	private boolean cnam;
+	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
+	private List<DoctorFormation> formations = new ArrayList<>();
+	@JsonIgnore
+	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
 	private List<Appointment> appointments;
-	@OneToMany(mappedBy="doctor")
+	@JsonIgnore
+	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
 	private List<Pattern> patterns;
+	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<Planning> plannings;
 	
@@ -67,6 +82,12 @@ public class Doctor extends User {
 	}
 	public void setPlannings(List<Planning> plannings) {
 		this.plannings = plannings;
+	}
+	public String getPaymentMethod() {
+		return PaymentMethod;
+	}
+	public void setPaymentMethod(String paymentMethod) {
+		PaymentMethod = paymentMethod;
 	}
  
 }

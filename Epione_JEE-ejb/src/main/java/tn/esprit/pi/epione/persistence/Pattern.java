@@ -17,7 +17,7 @@ public class Pattern {
 	private int periode;
 	@ManyToOne
 	private Doctor doctor;
-	
+	private boolean isActif ;
 	public int getId() {
 		return id;
 	}
@@ -48,6 +48,32 @@ public class Pattern {
 	public void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
 	}
+	public boolean isActif() {
+		return isActif;
+	}
+	public void setActif(boolean isActif) {
+		this.isActif = isActif;
+	}
+	public Pattern(float price, String label, int periode, Doctor doctor) {
+		super();
+		this.price = price;
+		this.label = label;
+		this.periode = periode;
+		this.doctor = doctor;
+		this.isActif = true;
+	}
+	public Pattern(String label, Doctor doctor) {
+		super();
+		this.label = label;
+		this.doctor = doctor;
+		this.isActif = true;
+	}
+	public Pattern() {
+		super();
+	}
+	
+	
+	
 	
 
 }
