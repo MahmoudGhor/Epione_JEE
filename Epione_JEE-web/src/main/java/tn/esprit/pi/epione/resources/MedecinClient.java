@@ -24,7 +24,7 @@ import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
 import tn.esprit.pi.epione.persistence.User;
 
-@Path("/medecin")
+@Path("/doctor")
 @RequestScoped
 public class MedecinClient {
 	@EJB
