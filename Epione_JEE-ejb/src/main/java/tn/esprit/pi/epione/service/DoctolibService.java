@@ -61,7 +61,21 @@ public class DoctolibService implements DoctolibServiceLocal {
 			} else {
 				d.setFirstname(CompleteName.text());
 			}
+			
+			/* remboursement */
+			String remboursement = null;
+			Element remb = doc.select("div.dl-profile-text").first();
 
+			/*for (Element e : remb) {
+				if (e.text().equalsIgnoreCase("Tarifs et remboursements ")) {
+
+					remboursement = e.nextElementSibling().text();
+				}
+			}*/
+			remboursement=remb.text().replace("Voir les tarifs", "");
+			
+			d.setRemboursement(remboursement);
+			/* end remboursement */
 			/* Payment Method */
 			String PaymentMethod = null;
 			Elements Payment = doc.select("h3.dl-profile-card-subtitle");

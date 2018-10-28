@@ -30,12 +30,8 @@ public class Doctor extends User {
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
 	private List<Appointment> appointments;
-<<<<<<< HEAD
-	@OneToMany(mappedBy="doctor")
-=======
-	@JsonIgnore
+	
 	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
->>>>>>> master
 	private List<Pattern> patterns;
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
