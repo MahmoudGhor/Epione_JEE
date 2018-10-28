@@ -13,4 +13,5 @@ public interface DoctolibServiceLocal {
 	
 	Doctor get(String path);
 	List<Doctor> getDoctorsbySpeciality(String speciality,int page);
+	
 }

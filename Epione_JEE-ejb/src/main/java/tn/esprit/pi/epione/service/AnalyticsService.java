@@ -24,9 +24,8 @@ import tn.esprit.pi.epione.persistence.Speciality;
 import tn.esprit.pi.epione.persistence.User;
 
 @Stateless
-
 public class AnalyticsService implements AnalyticsServiceLocal {
-	@PersistenceContext(unitName = "Epione_JEE-ejb"/* , type=PersistenceContextType.EXTENDED */)
+	@PersistenceContext(unitName = "Epione_JEE-ejb")
 	EntityManager em;
 
 	/* Get (count) treated patients */
@@ -40,16 +39,16 @@ public class AnalyticsService implements AnalyticsServiceLocal {
 	/* Get (count) canceled Appointments */
 	@Override
 	public long countCanceledAppointments() {
-		long result = (long) em.createQuery("SELECT  count(id) from Appointment where status=false").getSingleResult();
+		long result = (long) em.createQuery("SELECT  count(id) from Appointment where status=0").getSingleResult();
 
 		return result;
 	}
 
 	/* count appointments by doctor */
 	@Override
-	public int countAppointmentsbyDoctor(Doctor d) {
+	public long countAppointmentsbyDoctor(int doc_id) {
 		int result = (int) em.createQuery("SELECT count(a) from Appointment a WHERE a.idDoctor = :id")
-				.setParameter("id", d.getId()).getSingleResult();
+				.setParameter("id", doc_id).getSingleResult();
 
 		return result;
 	}

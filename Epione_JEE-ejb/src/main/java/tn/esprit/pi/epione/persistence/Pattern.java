@@ -1,6 +1,7 @@
 package tn.esprit.pi.epione.persistence;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +19,7 @@ public class Pattern {
 	private String label;
 	private int periode;
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Doctor doctor;
 	private boolean isActif ;
 	public int getId() {

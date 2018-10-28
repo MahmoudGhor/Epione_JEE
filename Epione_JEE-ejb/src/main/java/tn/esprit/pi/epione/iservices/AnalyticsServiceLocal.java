@@ -22,7 +22,7 @@ public interface AnalyticsServiceLocal {
 
 	public List<Object> appointmentsbyYear(int doc_id); // done without title
 
-	public int countAppointmentsbyDoctor(Doctor d);
+	public long countAppointmentsbyDoctor(int doc_id);
 
 	public int countAppointmentsbyPatient(Patient p);
 

@@ -45,6 +45,15 @@ public class AnalyticsClient {
 
 		return AnalyticsService.countCanceledAppointments();
 	}
+	
+	
+	@Path("/appointment/bydoctor/{doctorid}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public long CountAppointmentByDoctor(@PathParam("doctorid") int doc_id) {
+
+		return AnalyticsService.countAppointmentsbyDoctor(doc_id);
+	}
 
 	@Path("/doctors/yearappointments/{doctorid}")
 	@GET
@@ -75,6 +84,7 @@ public class AnalyticsClient {
 	public List<Appointment> getAppointmentsbyDoctor(@PathParam("doc_id") int doc_id) {
 		return AnalyticsService.getAppointmentsByDoctor(doc_id);
 	}
+	
 	
 	
 	

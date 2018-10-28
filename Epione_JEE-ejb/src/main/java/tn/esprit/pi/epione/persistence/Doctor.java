@@ -22,10 +22,11 @@ public class Doctor extends User {
 	private String biography;
 	private String Office_Number;
 	private String Website;
-	private String OfficeAdress;
 	private String Doctolib;
-	
+	private String OfficeAdress;
 	private String Remboursement;
+	
+	
 	@OneToMany(mappedBy="doctor")
 	private List<DoctorFormation> formations = new ArrayList<>();
 	@JsonIgnore
