@@ -28,6 +28,7 @@ public class Mail {
         try {
         	Properties props = new Properties();
             props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.host", "smtp.gmail.com");
             props.put("mail.smtp.port", "587");
@@ -38,7 +39,7 @@ public class Mail {
                           return new PasswordAuthentication("pi.dev.esrpit2017@gmail.com","aZERTY123");
                       }
                     });
-             System.out.println("111111");
+             System.out.println("Test sending mail");
             Message message = new MimeMessage(session);
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(addresses));
             message.setSubject(topic);
