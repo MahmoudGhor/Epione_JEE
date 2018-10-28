@@ -14,6 +14,7 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import tn.esprit.pi.epione.iservices.DoctolibServiceLocal;
+import tn.esprit.pi.epione.persistence.Adresse;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.DoctorFormation;
 import tn.esprit.pi.epione.persistence.Pattern;
@@ -28,7 +29,7 @@ public class DoctolibService implements DoctolibServiceLocal {
 	public Doctor get(String path) {
 
 		String name;
-		String url = "https://www.doctolib.fr"+path;
+		String url = path;
 		try {
 			Document doc = Jsoup.connect(url).userAgent(
 					"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
@@ -46,10 +47,11 @@ public class DoctolibService implements DoctolibServiceLocal {
 			String urlImg = Img.absUrl("src"); // Profile Picture link
 			Element Adresse = doc.select("div.dl-profile-text").get(2); // Adresse
 
+			d.setDoctolib(path);
 			d.setOfficeAdress(Adresse.text());
 			d.setPicture(urlImg);
-			
-			/* set speciality*/
+
+			/* set speciality */
 			Speciality s = new Speciality();
 			s.setSpeciality(Speciality.text());
 			d.setSpeciality(s);
@@ -61,21 +63,22 @@ public class DoctolibService implements DoctolibServiceLocal {
 			} else {
 				d.setFirstname(CompleteName.text());
 			}
-			
+
 			/* remboursement */
 			String remboursement = null;
 			Element remb = doc.select("div.dl-profile-text").first();
 
-			/*for (Element e : remb) {
-				if (e.text().equalsIgnoreCase("Tarifs et remboursements ")) {
+			/*
+			 * for (Element e : remb) { if
+			 * (e.text().equalsIgnoreCase("Tarifs et remboursements ")) {
+			 * 
+			 * remboursement = e.nextElementSibling().text(); } }
+			 */
+			remboursement = remb.text().replace("Voir les tarifs", "");
 
-					remboursement = e.nextElementSibling().text();
-				}
-			}*/
-			remboursement=remb.text().replace("Voir les tarifs", "");
-			
 			d.setRemboursement(remboursement);
 			/* end remboursement */
+
 			/* Payment Method */
 			String PaymentMethod = null;
 			Elements Payment = doc.select("h3.dl-profile-card-subtitle");
@@ -97,23 +100,22 @@ public class DoctolibService implements DoctolibServiceLocal {
 				if (f.text().equals("Exercices en cabinet")) {
 					break;
 				}
-				String date=f.select("div.dl-profile-entry-time").text();
-				String label=f.select("div.dl-profile-entry-label").text();
-				if (!(date.contains("-")==true || date.contains("Depuis")==true)) {
-					DoctorFormation formation = new DoctorFormation(date,
-							label, d);
+				String date = f.select("div.dl-profile-entry-time").text();
+				String label = f.select("div.dl-profile-entry-label").text();
+				if (!(date.contains("-") == true || date.contains("Depuis") == true)) {
+					DoctorFormation formation = new DoctorFormation(date, label, d);
 					DF.add(formation);
-System.out.println(date);
+					System.out.println(date);
 				}
-				
-				/*DoctorFormation formation = new DoctorFormation(f.select("div.dl-profile-entry-time").text(),
-						f.select("div.dl-profile-entry-label").text(), d);*/
+
+				/*
+				 * DoctorFormation formation = new
+				 * DoctorFormation(f.select("div.dl-profile-entry-time").text(),
+				 * f.select("div.dl-profile-entry-label").text(), d);
+				 */
 
 			}
-			
-		
 
-			
 			d.setFormations(DF);
 
 			/* end formations et distinctions */
@@ -128,9 +130,9 @@ System.out.println(date);
 				list_patterns.add(p);
 			}
 			d.setPatterns(list_patterns);
-			
-			/* end motifs */
 
+			/* end motifs */
+			
 			return d;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -142,12 +144,12 @@ System.out.println(date);
 
 	@Override
 	public List<Doctor> getDoctorsbySpeciality(String speciality, int page) {
-		String url = "https://www.doctolib.fr/"+speciality+"?page="+page;
-		if (page==0) {
-			url = "https://www.doctolib.fr/"+speciality+"?page="+1;
+		String url = "https://www.doctolib.fr/" + speciality + "?page=" + page;
+		if (page == 0) {
+			url = "https://www.doctolib.fr/" + speciality + "?page=" + 1;
 
 		}
-		
+
 		Document doc;
 		List<Doctor> liste_doc = new ArrayList<>();
 
@@ -155,37 +157,41 @@ System.out.println(date);
 			doc = Jsoup.connect(url).userAgent(
 					"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
 					.get();
-			
 
-			Elements paragraphs = doc.getElementsByClass("dl-search-result-presentation") ; 
-			  for(Element p : paragraphs)
-			  {
-				
+			Elements paragraphs = doc.getElementsByClass("dl-search-result-presentation");
+			for (Element p : paragraphs) {
+
 				String name = p.select(".dl-search-result-name").text();
-				//String objet = p.select(".dl-search-result-subtitle").text();
 				String adresse = p.select(".dl-text").text();
-				String image = p.select("img").attr("src") ; 
-				String remboursement=p.select("div.dl-search-result-regulation-sector").text();
+				String image = p.select("img").attr("src");
+				String remboursement = p.select("div.dl-search-result-regulation-sector").text();
 				String spec = p.select("div.dl-search-result-subtitle").text();
-				System.out.println(name + image );
-				Doctor doctor = new Doctor() ; 
+				Element link=p.select("a.dl-search-result-name").first();
+				String doctolib=link.absUrl("href");
+				
+				Doctor doctor = new Doctor();
+				doctor.setDoctolib(doctolib);
 				doctor.setFirstname(name);
 				doctor.setOfficeAdress(adresse);
 				doctor.setPicture(image);
 				doctor.setRemboursement(remboursement);
+			
 				Speciality s = new Speciality();
 				s.setSpeciality(spec);
 				doctor.setSpeciality(s);
-				liste_doc.add(doctor) ;
-	}
-			
+				
+				
+				liste_doc.add(doctor);
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 
 		return liste_doc;
 	}
-
+	
+	
+	
 }

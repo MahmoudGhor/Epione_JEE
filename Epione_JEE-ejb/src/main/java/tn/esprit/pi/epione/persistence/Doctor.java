@@ -23,6 +23,7 @@ public class Doctor extends User {
 	private String Office_Number;
 	private String Website;
 	private String OfficeAdress;
+	private String Doctolib;
 	
 	private String Remboursement;
 	@OneToMany(mappedBy="doctor")
@@ -105,6 +106,12 @@ public class Doctor extends User {
 	}
 	public void setRemboursement(String remboursement) {
 		Remboursement = remboursement;
+	}
+	public String getDoctolib() {
+		return Doctolib;
+	}
+	public void setDoctolib(String doctolib) {
+		Doctolib = doctolib;
 	}
  
 }
