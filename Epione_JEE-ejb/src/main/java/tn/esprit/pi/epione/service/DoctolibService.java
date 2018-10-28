@@ -25,10 +25,10 @@ public class DoctolibService implements DoctolibServiceLocal {
 	DoctolibServiceLocal DL;
 
 	@Override
-	public Doctor get() {
+	public Doctor get(String path) {
 
 		String name;
-		String url = "https://www.doctolib.fr/dentiste/beausoleil/david-sinnonio";
+		String url = "https://www.doctolib.fr"+path;
 		try {
 			Document doc = Jsoup.connect(url).userAgent(
 					"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
@@ -83,9 +83,17 @@ public class DoctolibService implements DoctolibServiceLocal {
 				if (f.text().equals("Exercices en cabinet")) {
 					break;
 				}
-				DoctorFormation formation = new DoctorFormation(f.select("div.dl-profile-entry-time").text(),
-						f.select("div.dl-profile-entry-label").text(), d);
-				DF.add(formation);
+				String date=f.select("div.dl-profile-entry-time").text();
+				String label=f.select("div.dl-profile-entry-label").text();
+				if (!(date.contains("-")==true || date.contains("Depuis")==true)) {
+					DoctorFormation formation = new DoctorFormation(date,
+							label, d);
+					DF.add(formation);
+System.out.println(date);
+				}
+				
+				/*DoctorFormation formation = new DoctorFormation(f.select("div.dl-profile-entry-time").text(),
+						f.select("div.dl-profile-entry-label").text(), d);*/
 
 			}
 			
@@ -119,9 +127,51 @@ public class DoctolibService implements DoctolibServiceLocal {
 	}
 
 	@Override
-	public List<Doctor> getDoctorsbySpeciality(String speciality) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Doctor> getDoctorsbySpeciality(String speciality, int page) {
+		String url = "https://www.doctolib.fr/"+speciality+"?page="+page;
+		if (page==0) {
+			url = "https://www.doctolib.fr/"+speciality+"?page="+1;
+
+		}
+		
+		Document doc;
+		List<Doctor> liste_doc = new ArrayList<>();
+
+		try {
+			doc = Jsoup.connect(url).userAgent(
+					"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
+					.get();
+			
+
+			Elements paragraphs = doc.getElementsByClass("dl-search-result-presentation") ; 
+			  for(Element p : paragraphs)
+			  {
+				
+				String name = p.select(".dl-search-result-name").text();
+				//String objet = p.select(".dl-search-result-subtitle").text();
+				String adresse = p.select(".dl-text").text();
+				String image = p.select("img").attr("src") ; 
+				String remboursement=p.select("div.dl-search-result-regulation-sector").text();
+				String spec = p.select("div.dl-search-result-subtitle").text();
+				System.out.println(name + image );
+				Doctor doctor = new Doctor() ; 
+				doctor.setFirstname(name);
+				doctor.setOfficeAdress(adresse);
+				doctor.setPicture(image);
+				doctor.setRemboursement(remboursement);
+				Speciality s = new Speciality();
+				s.setSpeciality(spec);
+				doctor.setSpeciality(s);
+				liste_doc.add(doctor) ;
+	}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		return liste_doc;
 	}
 
 }
