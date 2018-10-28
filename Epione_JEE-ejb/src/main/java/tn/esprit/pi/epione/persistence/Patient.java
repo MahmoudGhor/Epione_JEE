@@ -18,6 +18,10 @@ public class Patient extends User {
 	public void setAppointments(List<Appointment> appointments) {
 		this.appointments = appointments;
 	}
+
+	
+
+
 	
 
 }
