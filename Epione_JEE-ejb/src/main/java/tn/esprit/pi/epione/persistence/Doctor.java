@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Doctor extends User {
@@ -33,8 +35,12 @@ public class Doctor extends User {
 	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
 	private List<Appointment> appointments;
 	
-	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@OneToMany(mappedBy="doctor", fetch=FetchType.EAGER)
 	private List<Pattern> patterns;
+	
+	@OneToMany(mappedBy="doctor")
+	private List<Acts> acts;
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<Planning> plannings;
@@ -113,6 +119,12 @@ public class Doctor extends User {
 	}
 	public void setDoctolib(String doctolib) {
 		Doctolib = doctolib;
+	}
+	public List<Acts> getActs() {
+		return acts;
+	}
+	public void setActs(List<Acts> acts) {
+		this.acts = acts;
 	}
  
 }

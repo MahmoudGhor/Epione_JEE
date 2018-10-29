@@ -14,6 +14,7 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import tn.esprit.pi.epione.iservices.DoctolibServiceLocal;
+import tn.esprit.pi.epione.persistence.Acts;
 import tn.esprit.pi.epione.persistence.Adresse;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.DoctorFormation;
@@ -39,6 +40,8 @@ public class DoctolibService implements DoctolibServiceLocal {
 			List<DoctorFormation> DF = new ArrayList<>();
 
 			List<Pattern> list_patterns = new ArrayList<>();
+			List<Acts> list_acts = new ArrayList<>();
+
 
 			/* les elements */
 			Element CompleteName = doc.select("span[itemprop=\"name\"]").first(); // Complete Name
@@ -121,7 +124,19 @@ public class DoctolibService implements DoctolibServiceLocal {
 			/* end formations et distinctions */
 
 			/* scrap motifs and add to doctor */
-			Elements Motif = doc.select("div.dl-profile-skill-chip");
+			Elements Act = doc.select("div.dl-profile-skill-chip");
+
+			for (Element f : Act) {
+
+				Acts a = new Acts(f.text(), d);
+				System.out.println(a.getName());
+				list_acts.add(a);
+			}
+			d.setActs(list_acts);
+
+			
+			
+			 Elements Motif = doc.select("option");
 
 			for (Element f : Motif) {
 
@@ -130,7 +145,9 @@ public class DoctolibService implements DoctolibServiceLocal {
 				list_patterns.add(p);
 			}
 			d.setPatterns(list_patterns);
-
+			 
+			
+			
 			/* end motifs */
 			
 			return d;

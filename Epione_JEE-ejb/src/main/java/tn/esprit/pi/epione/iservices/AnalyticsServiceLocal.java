@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Local;
-
-import com.google.gson.JsonObject;
+import javax.json.JsonObject;
 
 import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
@@ -28,9 +27,16 @@ public interface AnalyticsServiceLocal {
 
 	public List<Doctor> getDoctorsByRegion(String region); // done
 	
-	public List<Appointment> getAppointmentsByDoctor(int doc_id); // done
+	public List<Appointment> getAppointmentsByDoctor(int doc_id); // done A TESTER
 
 	public List<Doctor> getDoctorsBySpecialities(Speciality speciality); // done
 	
+	public JsonObject VacationsByDoctor(int doc_id); // Open-Used Vacations
+	
+	public List<Appointment> AppointmentsBySpeciality(Speciality speciality); // Stats Count Appointments by Speciality A TESTER
 
+	
+//rendez vous par specialité
+	// lage des patients
+	//
 }
