@@ -119,7 +119,7 @@ public class AnalyticsClient {
 	{
 		User x = (cr.getDoctor());
 		System.out.println(cr.getContenu());
-		return Response.ok(AnalyticsServiceR.addCompteRendu(cr.getContenu(), cr.getDocument(), cr.getImg())).build();
+		return Response.ok(AnalyticsServiceR.addCompteRendu(cr.getDoctor(),cr.getPatient(),cr.getContenu(), cr.getDocument(), cr.getImg())).build();
 		
 	}
 	

@@ -149,19 +149,20 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 	}
 
 	@Override
-	public javax.json.JsonObject addCompteRendu(Patient p, Doctor d,String contenu, String document, String img) {
-		CompteRendu cr = new CompteRendu(patient, doctor, contenu, img, document)
-	
-		if (cr.getContenu()!="") {
-			em.merge(cr);
-			return Json.createObjectBuilder().add("succes", "Compte rendu added successfully").build();
-		}
-		else 
-		{
-	return Json.createObjectBuilder().add("error", "Error adding Compterendu").build();
+	public javax.json.JsonObject addCompteRendu(Doctor d, Patient p, String contenu, String document, String img) {
+		CompteRendu cr = new CompteRendu(p, d, contenu, img, document);
+				
+				if (cr.getContenu()!="") {
+					em.merge(cr);
+					return Json.createObjectBuilder().add("succes", "Compte rendu added successfully").build();
+				}
+				else 
+				{
+			return Json.createObjectBuilder().add("error", "Error adding Compterendu").build();
 
-		}
-		
+				}
+				
 	}
 
+	
 }
