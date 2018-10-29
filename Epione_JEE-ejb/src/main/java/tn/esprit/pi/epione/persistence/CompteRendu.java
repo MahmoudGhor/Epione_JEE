@@ -24,6 +24,8 @@ public class CompteRendu implements Serializable {
 	private Doctor doctor;
 	private String contenu;
 	private String img;
+	
+
 	private String document;
 
 	public String getImg() {
@@ -85,6 +87,15 @@ public class CompteRendu implements Serializable {
 
 	public void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
+	}
+	
+	public CompteRendu(Patient patient, Doctor doctor, String contenu, String img, String document) {
+		super();
+		this.patient = patient;
+		this.doctor = doctor;
+		this.contenu = contenu;
+		this.img = img;
+		this.document = document;
 	}
 
 }
