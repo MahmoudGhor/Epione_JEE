@@ -8,32 +8,44 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Doctor extends User {
 	
-	@Enumerated(EnumType.STRING)
+	@OneToOne
 	private Speciality speciality;
 	
 	private String PaymentMethod;
 	private String biography;
 	private String Office_Number;
 	private String Website;
-	private boolean cnam;
-	@JsonIgnore
+	private String Doctolib;
+	private String OfficeAdress;
+	private String Remboursement;
+	
+	
 	@OneToMany(mappedBy="doctor")
 	private List<DoctorFormation> formations = new ArrayList<>();
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
 	private List<Appointment> appointments;
-	@JsonIgnore
-	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@OneToMany(mappedBy="doctor", fetch=FetchType.EAGER)
 	private List<Pattern> patterns;
+	
+	@OneToMany(mappedBy="doctor")
+	private List<Acts> acts;
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<Planning> plannings;
+	
+	
 	
 	public Speciality getSpeciality() {
 		return speciality;
@@ -59,12 +71,7 @@ public class Doctor extends User {
 	public void setWebsite(String website) {
 		Website = website;
 	}
-	public boolean isCnam() {
-		return cnam;
-	}
-	public void setCnam(boolean cnam) {
-		this.cnam = cnam;
-	}
+	
 	public List<Appointment> getAppointments() {
 		return appointments;
 	}
@@ -88,6 +95,36 @@ public class Doctor extends User {
 	}
 	public void setPaymentMethod(String paymentMethod) {
 		PaymentMethod = paymentMethod;
+	}
+	public List<DoctorFormation> getFormations() {
+		return formations;
+	}
+	public void setFormations(List<DoctorFormation> formations) {
+		this.formations = formations;
+	}
+	public String getOfficeAdress() {
+		return OfficeAdress;
+	}
+	public void setOfficeAdress(String officeAdress) {
+		OfficeAdress = officeAdress;
+	}
+	public String getRemboursement() {
+		return Remboursement;
+	}
+	public void setRemboursement(String remboursement) {
+		Remboursement = remboursement;
+	}
+	public String getDoctolib() {
+		return Doctolib;
+	}
+	public void setDoctolib(String doctolib) {
+		Doctolib = doctolib;
+	}
+	public List<Acts> getActs() {
+		return acts;
+	}
+	public void setActs(List<Acts> acts) {
+		this.acts = acts;
 	}
  
 }
