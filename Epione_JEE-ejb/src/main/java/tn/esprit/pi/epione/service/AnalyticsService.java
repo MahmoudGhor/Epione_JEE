@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.print.Doc;
 
 import com.google.gson.Gson;
@@ -148,19 +149,21 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 
 	}
 
+	
 	@Override
-	public javax.json.JsonObject addCompteRendu(Doctor d, Patient p, String contenu, String document, String img) {
-		CompteRendu cr = new CompteRendu(p, d, contenu, img, document);
-				
-				if (cr.getContenu()!="") {
-					em.merge(cr);
+	public javax.json.JsonObject addCompteRendu(String d, String p, String contenu, String document, String img) {
+		System.out.println(d+"aaaaaaaaaa");
+		//Doctor d1= us.findDoctorById(Integer.parseInt(d));
+		//Patient p1= us.findPatientById(Integer.parseInt(p));
+		Doctor d1 = em.find(Doctor.class, 3);
+		Patient p1 = em.find(Patient.class, 7);
+		
+		CompteRendu cr = new CompteRendu(p1, d1, contenu, img, document);
+		System.out.println(p1.getEmail());
+			
+					em.persist(cr);
 					return Json.createObjectBuilder().add("succes", "Compte rendu added successfully").build();
-				}
-				else 
-				{
-			return Json.createObjectBuilder().add("error", "Error adding Compterendu").build();
-
-				}
+			
 				
 	}
 

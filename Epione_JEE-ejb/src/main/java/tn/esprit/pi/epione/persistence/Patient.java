@@ -10,6 +10,9 @@ public class Patient extends User {
 	
 	@OneToMany(mappedBy="patient")
 	private List<Appointment> appointments;
+	
+	@OneToMany(mappedBy="patient")
+	private List<CompteRendu> cr;
 
 	public List<Appointment> getAppointments() {
 		return appointments;

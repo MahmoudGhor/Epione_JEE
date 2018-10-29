@@ -2,6 +2,7 @@ package tn.esprit.pi.epione.resources;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -115,11 +116,11 @@ public class AnalyticsClient {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response signUpPatient(CompteRendu cr)
+	public Response signUpPatient(Map<String, String> cr )
 	{
-		User x = (cr.getDoctor());
-		System.out.println(cr.getContenu());
-		return Response.ok(AnalyticsServiceR.addCompteRendu(cr.getDoctor(),cr.getPatient(),cr.getContenu(), cr.getDocument(), cr.getImg())).build();
+		
+		System.out.println(cr.get("iddoctor")+"aaaaaa");
+		return Response.ok(AnalyticsServiceR.addCompteRendu(cr.get("iddoctor"),cr.get("idpatient"),cr.get("contenu"), cr.get("document"), cr.get("img"))).build();
 		
 	}
 	

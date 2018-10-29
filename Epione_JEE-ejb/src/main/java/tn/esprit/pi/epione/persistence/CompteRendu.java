@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 
-public class CompteRendu implements Serializable {
+public class CompteRendu {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

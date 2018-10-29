@@ -12,5 +12,5 @@ import tn.esprit.pi.epione.persistence.Patient;
 public interface AnalyticsServiceRemote {
 
 	
-	JsonObject addCompteRendu(Doctor d, Patient p,String contenu, String document, String img);
+	JsonObject addCompteRendu(String d, String p,String contenu, String document, String img);
 }

@@ -40,6 +40,9 @@ public class Doctor extends User {
 	private List<Pattern> patterns;
 	
 	@OneToMany(mappedBy="doctor")
+	private List<CompteRendu> cr;
+	
+	@OneToMany(mappedBy="doctor")
 	private List<Acts> acts;
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
