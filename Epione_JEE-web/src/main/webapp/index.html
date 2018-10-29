@@ -1,29 +1,58 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-	<title>test chat</title>
-</head>
-<body>
-	<textarea id="messages" readonly="readonly" rows="10" cols="45"></textarea><br>
-	<input type="text" id="message" size="50" />
-	<input type="button" value="send" onclick="send()" />
-
-	<script type="text/javascript">
-		var websocket = new WebSocket("ws://127.0.0.1:18080/Epione_JEE-web/chat");
-		websocket.onmessage = function processMessage(messageData) {
-			var json = JSON.parse(messageData.data);
-			document.getElementById('messages').value += json.message+ '\n';
-		};
-		function send() {
-			var message = document.getElementById('message');
-			websocket.send(JSON.stringify({'message': message.value}));
-			message.value="";
-		};
-		window.onbeforunload = function(){
-			websocket.onclose = function () {};
-			websocket.close();
-		};
-	</script>
-</body>
+    <head>
+        <title>Patient</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div class="table">
+            <div>
+                <span>Ptient id:</span>
+                <input id="keyToConnect" placeholder="id"/>
+            </div>
+            <button onclick="connect();return false;" class="button">Patient Connect</button>
+        </div>
+        <div class="table">
+            <div>Send your question</div>
+            <div>
+                <span>Message:</span>
+                <input id="messageToKey"/>
+            </div>
+            <button onclick="sendMessageToKey();return false;" class="button">Send</button>
+        </div>
+        <div id="messages"></div>
+        <script type="text/javascript">
+            var timer;
+            var ws;
+            var yourKey;
+            connect = function() {
+                yourKey = document.getElementById('keyToConnect').value;
+                var webSocketUrl = 'ws://localhost:18080/Epione_JEE-web/chat/quest/' + yourKey;
+                ws = new WebSocket(webSocketUrl);
+                ws.onopen = function() {
+                    appendMessage('info', 'WebSocket connection opened!');
+                };
+                ws.onmessage = function(event) {
+                    appendMessage('message', 'Doctor: '+event.data);
+                };
+                ws.onclose = function() {
+                    appendMessage('warn', 'WebSocket closed');
+                };
+                ws.onerror = function(err) {
+                    appendMessage(err);
+                };
+            };
+            
+            appendMessage = function(type, text) {
+                document.getElementById('messages').innerHTML += '<div class="' + type + '">' + text + '</div>';
+            };
+            sendMessageToKey = function() {
+                var messageToKey = document.getElementById('messageToKey').value;
+                ws.send(messageToKey);
+                appendMessage('message', 'you > ' + yourKey + ': "' + messageToKey + '"');
+            };
+        </script>
+    </body>
 </html>

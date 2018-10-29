@@ -8,6 +8,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -41,6 +42,7 @@ public class UserClient {
 			} else {
 				jsonObject = jsonObjectToBuilder(jsonObject).add("token", generateToken.issueToken(user.getEmail()))
 						.build();
+				Connected_User.setUser(user); // get the connected user
 				return Response.ok(jsonObject).build();
 			}
 		} else {
@@ -50,6 +52,7 @@ public class UserClient {
 			} else {
 				jsonObject = jsonObjectToBuilder(jsonObject)
 						.add("token", generateToken.issueToken(user.getUsername())).build();
+				Connected_User.setUser(user); // get the connected user
 				return Response.ok(jsonObject).build();
 			}
 
