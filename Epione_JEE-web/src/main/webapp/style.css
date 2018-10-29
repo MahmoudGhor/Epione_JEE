@@ -1,0 +1,54 @@
+html {
+    font-family: sans-serif;
+}
+
+h1 {
+    color: #3388aa;
+}
+
+.info {
+    color: #33aa88;
+}
+.warn {
+    color: #aaaa33;
+}
+.message {
+    color: #333;
+}
+
+.table {
+    border: 3px solid #eee;
+    margin: 0.3em 0.5em;
+    padding: 0.3em 0.5em;
+    display: inline-block;
+    vertical-align: top;
+}
+.table span,
+.table input,
+.table .button {
+    box-sizing: border-box;
+    min-width: 100px;
+    margin: 0.3em 0.5em;
+    padding: 0.3em 0.5em;
+    display: inline-block;
+}
+.table .button {
+    font-weight: bold;
+}
+
+#usersList a {
+    display: block;
+}
+
+#tagList a.remove-tag {
+    color:#ff8866;
+    border: 1px solid #ff8866;
+    border-radius: 50px;
+    padding: 0.1em 0.4em;
+    text-decoration: none;
+}
+#tagList a.remove-tag:hover {
+    color: white;
+    background: red;
+    border: 1px solid #aa0000;
+}

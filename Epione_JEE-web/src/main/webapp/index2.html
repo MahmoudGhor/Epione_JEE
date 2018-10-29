@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Doctor</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+	<body>
+		 <form method="post" action="epione/messages/ques/send" class="table">
+		 
+		 		<input type="button" value="1" onclick="connect(this);return false;" />
+		 		<input type="button" value="2" onclick="connect(this);return false;" />
+		 		<input type="button" value="3" onclick="connect(this);return false;" /><br><br>
+		 
+	            <div>Response to question</div>
+	            <div>
+	                <span>Patient:</span>
+	                <input type="text" name="key" id="keyPatient"/>
+	            </div>
+	            <div>
+	                <span>Message:</span>
+	                <input type="text" name="message" id="messageToOtherKey"/>
+	            </div>
+	            <input type="submit" value="Send" onclick="onFormSubmit();" class="button">
+	        </form>
+	        <div id="messages"></div>
+	        <script type="text/javascript">
+            var timer;
+            var ws;
+            var yourKey;
+            connect = function(elem) {
+                id = elem.value;
+                var webSocketUrl = 'ws://localhost:18080/Epione_JEE-web/chat/quest/' + id;
+                ws = new WebSocket(webSocketUrl);
+                ws.onopen = function() {
+                    appendMessage('info', 'Connecter! - Patient ID :'+id);
+                };
+                ws.onmessage = function(event) {
+                    appendMessage('message', event.data);
+                };
+                ws.onclose = function() {
+                    appendMessage('warn', 'WebSocket closed');
+                };
+                ws.onerror = function(err) {
+                    appendMessage(err);
+                };
+                document.getElementById('keyPatient').value = id;
+            };
+            
+            appendMessage = function(type, text) {
+                document.getElementById('messages').innerHTML += '<div class="' + type + '">' + text + '</div>';
+            };
+            
+            onFormSubmit = function() {
+                var messageToOther = document.getElementById('messageToOtherKey').value;
+                var otherKey = document.getElementById('otherKey').value;
+                appendMessage('message', 'you > ' + otherKey + ': "' + messageToOther + '"');
+            };
+        </script>
+	</body>
+</html>
