@@ -152,11 +152,11 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 	
 	@Override
 	public javax.json.JsonObject addCompteRendu(String d, String p, String contenu, String document, String img) {
-		System.out.println(d+"aaaaaaaaaa");
-		//Doctor d1= us.findDoctorById(Integer.parseInt(d));
-		//Patient p1= us.findPatientById(Integer.parseInt(p));
-		Doctor d1 = em.find(Doctor.class, 3);
-		Patient p1 = em.find(Patient.class, 7);
+		//System.out.println(d+"aaaaaaaaaa");
+		//Doctor d1= findDoctorById(Integer.parseInt(d));
+		//Patient p1= findPatientById(Integer.parseInt(p));
+		Doctor d1 = em.find(Doctor.class, Integer.parseInt(d));
+		Patient p1 = em.find(Patient.class, Integer.parseInt(p));
 		
 		CompteRendu cr = new CompteRendu(p1, d1, contenu, img, document);
 		System.out.println(p1.getEmail());
@@ -166,6 +166,21 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 			
 				
 	}
+	
+	
+	/********* find patient by id ************************************/
+	@Override
+	public Patient findPatientById(int idPatient) {
+		return em.find(Patient.class, idPatient);
+	}
+	
+	
+	/*********** find doctor by id *********************************/
+	@Override
+	public Doctor findDoctorById(int idDoctor) {
+		return em.find(Doctor.class, idDoctor);
+	}
+
 
 	
 }
