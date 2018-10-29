@@ -1,10 +1,17 @@
 package tn.esprit.pi.epione.persistence;
 
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Speciality {
@@ -14,8 +21,9 @@ public class Speciality {
 	private int id;
 	private String speciality;
 	
-	@OneToOne(mappedBy="speciality")
-	private Doctor doctor;
+	@JsonIgnore
+	@OneToMany(mappedBy=("speciality"),fetch = FetchType.EAGER)
+	private List<Doctor> doctor;
 	
 	public String getSpeciality() {
 		return speciality;

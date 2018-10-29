@@ -22,7 +22,7 @@ public class DoctorFormation implements Serializable {
 	private String date;
 	private String diplome;
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Doctor doctor;
 
 

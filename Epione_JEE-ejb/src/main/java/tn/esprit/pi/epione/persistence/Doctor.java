@@ -7,17 +7,19 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
 public class Doctor extends User {
-	
-	@OneToOne
+	@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+	@ManyToOne
 	private Speciality speciality;
 	
 	private String PaymentMethod;
@@ -28,9 +30,10 @@ public class Doctor extends User {
 	private String OfficeAdress;
 	private String Remboursement;
 	
-	
+	@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 	@OneToMany(mappedBy="doctor")
 	private List<DoctorFormation> formations = new ArrayList<>();
+	
 	@JsonIgnore
 	@OneToMany(mappedBy="doctor", fetch=FetchType.LAZY)
 	private List<Appointment> appointments;

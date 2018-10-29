@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Entity implementation class for Entity: CompteRendu
@@ -17,6 +18,7 @@ public class CompteRendu {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@JsonInclude
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Patient patient;
 	@JsonIgnore

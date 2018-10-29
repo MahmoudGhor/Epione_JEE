@@ -119,7 +119,6 @@ public class AnalyticsClient {
 	public Response signUpPatient(Map<String, String> cr )
 	{
 		
-		System.out.println(cr.get("iddoctor")+"aaaaaa");
 		return Response.ok(AnalyticsServiceR.addCompteRendu(cr.get("iddoctor"),cr.get("idpatient"),cr.get("contenu"), cr.get("document"), cr.get("img"))).build();
 		
 	}

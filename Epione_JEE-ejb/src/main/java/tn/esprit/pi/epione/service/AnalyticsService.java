@@ -73,8 +73,7 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 	/* get doctors by region */
 	@Override
 	public List<Doctor> getDoctorsByRegion(String region) {
-		TypedQuery<Doctor> query = em.createQuery("select d from Doctor d where d.ville=?1", Doctor.class);
-		query.setParameter(1, region);
+		TypedQuery<Doctor> query = em.createQuery("select d from Doctor d where d.OfficeAdress LIKE '%"+region+"%'", Doctor.class);
 		return query.getResultList();
 	}
 
@@ -127,12 +126,14 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 				.createQuery("SELECT count(p) from Planning p where p.disponibility=0 and p.doctor.id=" + doc_id)
 				.getSingleResult();
 		JsonObjectBuilder succesBuilder = Json.createObjectBuilder();
+		if (query2!=0) {
+			Float taux = (float) ((query1 * 100) / query2);
+			succesBuilder.add("Taux", taux);
 
-		Float taux = (float) ((query1 * 100) / query2);
+		}
 
 		succesBuilder.add("UsedVacations", query1);
 		succesBuilder.add("OpenedVacations", query2);
-		succesBuilder.add("Taux", taux);
 
 		return succesBuilder.build();
 	}
