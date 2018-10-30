@@ -33,12 +33,43 @@
     <artifactId>jackson-databind</artifactId>
     <version>2.9.7</version>
 </dependency>
+	<dependency>
+		<groupId>org.jsoup</groupId>
+		<artifactId>jsoup</artifactId>
+		<version>1.8.3</version>
+	</dependency>
 
- <dependency>
-   			 <groupId>org.jsoup</groupId>
-   			 <artifactId>jsoup</artifactId>
-   			 <version>1.8.3</version>
-		</dependency>
+	<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-calendar -->
+	<dependency>
+	<groupId>com.google.apis</groupId>
+	<artifactId>google-api-services-calendar</artifactId>
+	<version>v3-rev355-1.25.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client -->
+	<dependency>
+		<groupId>com.google.oauth-client</groupId>
+		<artifactId>google-oauth-client</artifactId>
+		<version>1.26.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client-jackson2 -->
+	<dependency>
+		<groupId>com.google.http-client</groupId>
+		<artifactId>google-http-client-jackson2</artifactId>
+		<version>1.26.0</version>
+	</dependency>
+
+	<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client-gson -->
+	<dependency>
+		<groupId>com.google.http-client</groupId>
+		<artifactId>google-http-client-gson</artifactId>
+		<version>1.26.0</version>
+		<scope>test</scope>
+	</dependency>
+    <dependency>
+    <groupId>com.google.oauth-client</groupId>
+    <artifactId>google-oauth-client-jetty</artifactId>
+    <version>1.26.0</version>
+</dependency>
 
 
 	</dependencies>

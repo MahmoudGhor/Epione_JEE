@@ -23,6 +23,8 @@ import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
 import tn.esprit.pi.epione.persistence.User;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 @Path("/doctor")
 @RequestScoped
@@ -163,14 +165,14 @@ public class MedecinClient {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response treatAppointment(Map<String, String> map) {
-		tn.esprit.pi.epione.persistence.Status x= null;
+		tn.esprit.pi.epione.persistence.Status stat= null;
 
 		if (map.get("newstate").equals("confirmed"))
-			x = tn.esprit.pi.epione.persistence.Status.confirmed;
+			stat = tn.esprit.pi.epione.persistence.Status.confirmed;
 
 		if (map.get("newstate").equals("refused"))
-			x = tn.esprit.pi.epione.persistence.Status.refused;
-		return Response.ok(userManager.treatAppointment(Integer.parseInt(map.get("appointment")), x)).build();
+			stat = tn.esprit.pi.epione.persistence.Status.refused;
+		return Response.ok(userManager.treatAppointment(Integer.parseInt(map.get("appointment")), stat)).build();
 	}
 
 	
@@ -233,6 +235,29 @@ public class MedecinClient {
 		}
 		
 		return Response.ok(userManager.getListAppointmentForSpecificDate(Integer.parseInt(map.get("idDoctor")), formatter.parse(map.get("startDate")), formatter.parse(map.get("endDate")))).build();
+	}
+	
+	/*************** test calendrier 
+	 * @throws IOException 
+	 * @throws GeneralSecurityException *******************/
+	@Path("/test")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response testCalendar() throws GeneralSecurityException, IOException
+	{
+		return Response.ok(userManager.getCaldendar()).build();
+	}
+	
+	
+	/*************** add calendrier 
+	 * @throws IOException 
+	 * @throws GeneralSecurityException *******************/
+	@Path("/set")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setCalendar() throws GeneralSecurityException, IOException
+	{
+		return Response.ok(userManager.setCalendar()).build();
 	}
 
 	
