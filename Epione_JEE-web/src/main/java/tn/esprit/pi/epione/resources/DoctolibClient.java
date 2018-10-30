@@ -52,8 +52,8 @@ public class DoctolibClient {
 	@Path("/getJson")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getDoctorsbySpeciality(@QueryParam("path") String path) {
+	public String getDoctorsbySpeciality(@QueryParam("path") String path,@QueryParam("page") String page) {
 
-		return D.getFromJson(path);
+		return D.getFromJson(path,page);
 	}
 }
