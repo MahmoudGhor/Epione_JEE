@@ -1,6 +1,11 @@
 package tn.esprit.pi.epione.service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -31,16 +36,16 @@ import tn.esprit.pi.epione.persistence.Speciality;
 import tn.esprit.pi.epione.persistence.User;
 
 @Stateless
-public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceRemote {
+public class AnalyticsService implements AnalyticsServiceLocal, AnalyticsServiceRemote {
 	@PersistenceContext(unitName = "Epione_JEE-ejb")
 	EntityManager em;
-	
+
 	UserService us;
 
 	/* Get (count) treated patients */
 	@Override
 	public long countTreatedPatients() {
-		long result = (long) em.createQuery("SELECT DISTINCT count(idPatient) from Appointment where date < CURDATE()")
+		long result = (long) em.createQuery("SELECT DISTINCT count(idPatient) from Appointment where date < CURDATE() and status='confirmed'")
 				.getSingleResult();
 		return result;
 	}
@@ -48,7 +53,7 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 	/* Get (count) canceled Appointments */
 	@Override
 	public long countCanceledAppointments() {
-		long result = (long) em.createQuery("SELECT  count(id) from Appointment where status=0").getSingleResult();
+		long result = (long) em.createQuery("SELECT  count(id) from Appointment where status='canceled'").getSingleResult();
 
 		return result;
 	}
@@ -74,7 +79,8 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 	/* get doctors by region */
 	@Override
 	public List<Doctor> getDoctorsByRegion(String region) {
-		TypedQuery<Doctor> query = em.createQuery("select d from Doctor d where d.OfficeAdress LIKE '%"+region+"%'", Doctor.class);
+		TypedQuery<Doctor> query = em.createQuery("select d from Doctor d where d.OfficeAdress LIKE '%" + region + "%'",
+				Doctor.class);
 		return query.getResultList();
 	}
 
@@ -117,9 +123,7 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 		return query.getResultList();
 	}
 
-	
-	
-	/*Get opened used vacations by doctor */
+	/* Get opened used vacations by doctor */
 	@Override
 	public javax.json.JsonObject VacationsByDoctor(int doc_id) {
 
@@ -130,7 +134,7 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 				.createQuery("SELECT count(p) from Planning p where p.disponibility=0 and p.doctor.id=" + doc_id)
 				.getSingleResult();
 		JsonObjectBuilder succesBuilder = Json.createObjectBuilder();
-		if (query2!=0) {
+		if (query2 != 0) {
 			Float taux = (float) ((query1 * 100) / query2);
 			succesBuilder.add("Taux", taux);
 
@@ -141,7 +145,7 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 
 		return succesBuilder.build();
 	}
-	
+
 	/* Get appointments by speciality */
 
 	@Override
@@ -156,46 +160,41 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 
 	}
 
-	
 	/* Add compte rendu */
 	@Override
 	public javax.json.JsonObject addCompteRendu(String d, String p, String contenu, String document, String img) {
-		//System.out.println(d+"aaaaaaaaaa");
-		//Doctor d1= findDoctorById(Integer.parseInt(d));
-		//Patient p1= findPatientById(Integer.parseInt(p));
+		// System.out.println(d+"aaaaaaaaaa");
+		// Doctor d1= findDoctorById(Integer.parseInt(d));
+		// Patient p1= findPatientById(Integer.parseInt(p));
 		Doctor d1 = em.find(Doctor.class, Integer.parseInt(d));
 		Patient p1 = em.find(Patient.class, Integer.parseInt(p));
-		
+
 		CompteRendu cr = new CompteRendu(p1, d1, contenu, img, document);
 		System.out.println(p1.getEmail());
-			
-					em.persist(cr);
-					return Json.createObjectBuilder().add("succes", "Compte rendu added successfully").build();
-			
-				
+
+		em.persist(cr);
+		return Json.createObjectBuilder().add("succes", "Compte rendu added successfully").build();
+
 	}
-	
-	
+
 	/********* find patient by id ************************************/
 	@Override
 	public Patient findPatientById(int idPatient) {
 		return em.find(Patient.class, idPatient);
 	}
-	
-	
+
 	/*********** find doctor by id *********************************/
 	@Override
 	public Doctor findDoctorById(int idDoctor) {
 		return em.find(Doctor.class, idDoctor);
 	}
-	
-	/*Get appointments by Pattern */
+
+	/* Get appointments by Pattern */
 
 	@Override
 	public List<Appointment> getAppointmentsByPattern(int pattern_id) {
 
-		TypedQuery<Appointment> query = em.createQuery(
-				"select c from Appointment c where c.pattern.id = ?1 ",
+		TypedQuery<Appointment> query = em.createQuery("select c from Appointment c where c.pattern.id = ?1 ",
 				Appointment.class);
 		query.setParameter(1, pattern_id);
 
@@ -203,12 +202,50 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 
 	}
 
+	/* Get prescripted medication */
 	@Override
 	public List<Medical_Prescription> getPrescribedMedication(String med) {
-		TypedQuery<Medical_Prescription> query = em.createQuery("select d from Medical_Prescription d where d.description LIKE '%"+med+"%'", Medical_Prescription.class);
+		TypedQuery<Medical_Prescription> query = em.createQuery(
+				"select d from Medical_Prescription d where d.description LIKE '%" + med + "%'",
+				Medical_Prescription.class);
 		return query.getResultList();
 	}
 
+	/* get patients by age range */
+	@Override
+	public List<Patient> getPatientsbyAgeRange(int age1, int age2) {
+		TypedQuery<Patient> query = em.createQuery(
+				"select p from Patient p where YEAR(CURRENT_DATE)-YEAR(p.birthday) BETWEEN ?1 and ?2 ", Patient.class);
+		query.setParameter(1, age1);
+		query.setParameter(2, age2);
+
+		return query.getResultList();
+	}
+
+	@Override
+	public List<Patient> getPatientsByDoctor(int doc_id) {
+		TypedQuery<Patient> query = em.createQuery(
+				"SELECT DISTINCT u.patient from Appointment u WHERE u.doctor.id=?1 ", Patient.class);
+		query.setParameter(1, doc_id);
+		
+
+		return query.getResultList();
+	}
+
+	@Override
+	public List<Patient> getPatientbyAgeRangeandDoctor(int doc_id,int age1, int age2) {
+		List<Patient> listep=getPatientsByDoctor(doc_id);
+		List<Patient> liste_patient = new ArrayList<>();
+		Calendar calendar = new GregorianCalendar();;
+		for (Patient p : listep) {
+			calendar.setTime(p.getBirthday());
+			if (LocalDate.now().getYear()-calendar.get(Calendar.YEAR)>=age1 && LocalDate.now().getYear()-calendar.get(Calendar.YEAR)<=age2) {
+				liste_patient.add(p);
+			}
+		}
+		return liste_patient;
+	}
 
 	
+
 }

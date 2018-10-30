@@ -186,10 +186,43 @@ public class AnalyticsClient {
 			}
 		}
 		JsonObjectBuilder succesBuilder = Json.createObjectBuilder();
-		succesBuilder.add("Nombre", number);
+		succesBuilder.add(med, number);
+		succesBuilder.add("Date debut", Date1.toString());
+		succesBuilder.add("Date fin", Date2.toString());
+
 		
 		return succesBuilder.build();
 
 	}
+	
+	/* Get patients by Age range  */
+	@Path("/patients/age/{age1}/{age2}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatientbyAgeRange(@PathParam("age1") int age1, @PathParam("age2") int age2) {
+		if (!AnalyticsService.getPatientsbyAgeRange(age1, age2).isEmpty()) {
+			return Response.ok(AnalyticsService.getPatientsbyAgeRange(age1, age2)).build();
+		} else {
+			return Response.ok("Il n'existe pas de patient dans cette tranche d'age").build();
+		}
 
+	}
+	
+	
+	/* Get patients by Age range  and doctor */
+
+	@Path("/patients/age/{age1}/{age2}/{doc_id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatientbyAgeRangeandDoctor(@PathParam("age1") int age1, @PathParam("age2") int age2,@PathParam("doc_id") int doc_id) {
+		if (!AnalyticsService.getPatientbyAgeRangeandDoctor(doc_id, age1, age2).isEmpty()) {
+			return Response.ok(AnalyticsService.getPatientbyAgeRangeandDoctor(doc_id, age1, age2)).build();
+		} else {
+			return Response.ok("Il n'existe pas de patient dans cette tranche d'age").build();
+		}
+
+	}
+	
+	
+	
 }

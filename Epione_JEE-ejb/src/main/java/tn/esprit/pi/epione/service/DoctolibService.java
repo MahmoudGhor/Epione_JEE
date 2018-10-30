@@ -1,11 +1,17 @@
 package tn.esprit.pi.epione.service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.json.JsonObject;
+import javax.net.ssl.HttpsURLConnection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,14 +48,14 @@ public class DoctolibService implements DoctolibServiceLocal {
 			List<Pattern> list_patterns = new ArrayList<>();
 			List<Acts> list_acts = new ArrayList<>();
 
-
 			/* les elements */
 			Element CompleteName = doc.select("span[itemprop=\"name\"]").first(); // Complete Name
 			Element Speciality = doc.select("h2.dl-profile-header-speciality").first(); // Speciality
 			Element Img = doc.select("img[itemprop=\"image\"][src]").first(); // Profile Picture
 			String urlImg = Img.absUrl("src"); // Profile Picture link
 			Element Adresse = doc.select("div.dl-profile-text").get(2); // Adresse
-
+			Element bio = doc.select("div.dl-profile-text.js-bio.dl-profile-bio").first();
+			d.setBiography(bio.text());
 			d.setDoctolib(path);
 			d.setOfficeAdress(Adresse.text());
 			d.setPicture(urlImg);
@@ -134,9 +140,7 @@ public class DoctolibService implements DoctolibServiceLocal {
 			}
 			d.setActs(list_acts);
 
-			
-			
-			 Elements Motif = doc.select("option");
+			Elements Motif = doc.select("option");
 
 			for (Element f : Motif) {
 
@@ -145,11 +149,9 @@ public class DoctolibService implements DoctolibServiceLocal {
 				list_patterns.add(p);
 			}
 			d.setPatterns(list_patterns);
-			 
-			
-			
+
 			/* end motifs */
-			
+
 			return d;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -183,21 +185,20 @@ public class DoctolibService implements DoctolibServiceLocal {
 				String image = p.select("img").attr("src");
 				String remboursement = p.select("div.dl-search-result-regulation-sector").text();
 				String spec = p.select("div.dl-search-result-subtitle").text();
-				Element link=p.select("a.dl-search-result-name").first();
-				String doctolib=link.absUrl("href");
-				
+				Element link = p.select("a.dl-search-result-name").first();
+				String doctolib = link.absUrl("href");
+
 				Doctor doctor = new Doctor();
 				doctor.setDoctolib(doctolib);
 				doctor.setFirstname(name);
 				doctor.setOfficeAdress(adresse);
 				doctor.setPicture(image);
 				doctor.setRemboursement(remboursement);
-			
+
 				Speciality s = new Speciality();
 				s.setSpeciality(spec);
 				doctor.setSpeciality(s);
-				
-				
+
 				liste_doc.add(doctor);
 			}
 
@@ -208,7 +209,43 @@ public class DoctolibService implements DoctolibServiceLocal {
 
 		return liste_doc;
 	}
-	
-	
-	
+
+	/* Get Json from Doctolib page */
+	@Override
+	public String getFromJson(String path, String page) {
+		String js = "";
+		// String ur="https://www.doctolib.fr/";
+		StringBuilder stringBuilder = new StringBuilder();
+		String ur = "https://www.doctolib.fr/";
+		if(page==null){
+			page = "0";
+			}	
+		try {
+			
+			if (Integer.parseInt(page) != 0) {
+				ur = "https://www.doctolib.fr/" + path + ".json?page=" + page;
+			} else {
+				ur = "https://www.doctolib.fr/" + path + ".json";
+			}
+
+			// URLConnection url = new
+			// URL("https://www.doctolib.fr/"+path+".json?page="+page).openConnection();
+			URLConnection url = new URL(ur).openConnection();
+
+			url.addRequestProperty("User-Agent",
+					"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+			BufferedReader br = new BufferedReader(new InputStreamReader(url.getInputStream()));
+			String str = "";
+
+			while (null != (str = br.readLine())) {
+				System.out.println(str);
+				stringBuilder.append(str);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return stringBuilder.toString();
+	}
+
 }
