@@ -1,6 +1,10 @@
 package tn.esprit.pi.epione.service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -216,6 +220,30 @@ public class AnalyticsService implements AnalyticsServiceLocal, AnalyticsService
 		query.setParameter(2, age2);
 
 		return query.getResultList();
+	}
+
+	@Override
+	public List<Patient> getPatientsByDoctor(int doc_id) {
+		TypedQuery<Patient> query = em.createQuery(
+				"SELECT DISTINCT u.patient from Appointment u WHERE u.doctor.id=?1 ", Patient.class);
+		query.setParameter(1, doc_id);
+		
+
+		return query.getResultList();
+	}
+
+	@Override
+	public List<Patient> getPatientbyAgeRangeandDoctor(int doc_id,int age1, int age2) {
+		List<Patient> listep=getPatientsByDoctor(doc_id);
+		List<Patient> liste_patient = new ArrayList<>();
+		Calendar calendar = new GregorianCalendar();;
+		for (Patient p : listep) {
+			calendar.setTime(p.getBirthday());
+			if (LocalDate.now().getYear()-calendar.get(Calendar.YEAR)>=age1 && LocalDate.now().getYear()-calendar.get(Calendar.YEAR)<=age2) {
+				liste_patient.add(p);
+			}
+		}
+		return liste_patient;
 	}
 
 	

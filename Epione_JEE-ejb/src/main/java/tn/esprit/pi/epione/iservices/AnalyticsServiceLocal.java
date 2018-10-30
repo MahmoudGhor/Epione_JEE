@@ -43,5 +43,9 @@ public interface AnalyticsServiceLocal {
 
 	public List<Patient> getPatientsbyAgeRange(int age1, int age2); // done
 	
+	public List<Patient> getPatientsByDoctor(int doc_id);
+	
+	public List<Patient> getPatientbyAgeRangeandDoctor(int doc_id,int age1, int age2);
+	
 
 }

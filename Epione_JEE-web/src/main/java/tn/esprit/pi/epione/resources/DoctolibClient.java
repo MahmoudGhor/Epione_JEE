@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import tn.esprit.pi.epione.filters.Secured;
 import tn.esprit.pi.epione.iservices.DoctolibServiceLocal;
 import tn.esprit.pi.epione.persistence.Doctor;
-@Secured
+//@Secured
 @Path("/doctolib")
 @RequestScoped
 public class DoctolibClient {
