@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 public class Appointment {
@@ -27,30 +27,26 @@ public class Appointment {
 	private int id;
 	@Temporal(TemporalType.DATE)
 	private Date date;
-	@Enumerated(EnumType.STRING)
-	private Status status;
 	private String description;
-	@JsonIgnore
 	@OneToOne(fetch= FetchType.EAGER)
 	private Medical_Prescription medical_Prescription;
-
+	@OneToOne(fetch= FetchType.EAGER)
+	private Rating rating;
 	
-	@JsonIgnore
 	@ManyToOne(fetch= FetchType.EAGER)
 	@JoinColumn(name="idDoctor",referencedColumnName="id",insertable=false, updatable=false)
 	private Doctor doctor;
-	@JsonIgnore
+	
 	@ManyToOne(fetch= FetchType.EAGER)
 	@JoinColumn(name="idPatient",referencedColumnName="id",insertable=false, updatable=false)
 	private Patient patient;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy="appointment")
+
+	@OneToMany(mappedBy="appointment", fetch=FetchType.EAGER)
 	private List<Recommandation> recommandations;
-	@JsonIgnore
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Pattern pattern;
-	@JsonIgnore
+
 	@OneToOne(fetch = FetchType.EAGER)
 	private Planning planning;
 	
@@ -67,19 +63,19 @@ public class Appointment {
 		this.date = date;
 	}
 	
-	public Status getStatus() {
-		return status;
-	}
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+
 	public Medical_Prescription getMedical_Prescription() {
 		return medical_Prescription;
 	}
 	public void setMedical_Prescription(Medical_Prescription medical_Prescription) {
 		this.medical_Prescription = medical_Prescription;
 	}
-
+	public Rating getRating() {
+		return rating;
+	}
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
 	public Doctor getDoctor() {
 		return doctor;
 	}
@@ -115,6 +111,13 @@ public class Appointment {
 	}
 	public void setPlanning(Planning planning) {
 		this.planning = planning;
+	}
+	@Override
+	public String toString() {
+		return "Appointment [id=" + id + ", date=" + date + ", description=" + description
+				+ ", medical_Prescription=" + medical_Prescription + ", rating=" + rating + ", doctor=" + doctor
+				+ ", patient=" + patient + ", recommandations=" + recommandations + ", pattern=" + pattern
+				+ ", planning=" + planning + "]";
 	}
 	
 	
