@@ -30,6 +30,7 @@ public class Appointment {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	private String description;
+	@JsonIgnore
 	@OneToOne(fetch= FetchType.EAGER)
 	private Medical_Prescription medical_Prescription;
 	@OneToOne(fetch= FetchType.EAGER)

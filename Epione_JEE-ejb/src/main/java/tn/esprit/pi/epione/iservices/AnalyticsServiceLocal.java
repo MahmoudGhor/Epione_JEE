@@ -8,6 +8,7 @@ import javax.json.JsonObject;
 
 import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
+import tn.esprit.pi.epione.persistence.Medical_Prescription;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Speciality;
 import tn.esprit.pi.epione.persistence.User;
@@ -21,9 +22,9 @@ public interface AnalyticsServiceLocal {
 
 	public List<Object> appointmentsbyYear(int doc_id); // done without title
 
-	public long countAppointmentsbyDoctor(int doc_id);
+	public long countAppointmentsbyDoctor(int doc_id); // done
 
-	public int countAppointmentsbyPatient(Patient p);
+	public long countAppointmentsbyPatient(int p); //done
 
 	public List<Doctor> getDoctorsByRegion(String region); // done
 	
@@ -34,6 +35,10 @@ public interface AnalyticsServiceLocal {
 	public JsonObject VacationsByDoctor(int doc_id); // Open-Used Vacations
 	
 	public List<Appointment> AppointmentsBySpeciality(Speciality speciality); // Stats Count Appointments by Speciality A TESTER
+
+	public List<Appointment> getAppointmentsByPattern(int pattern_id); // done
+	
+	public List<Medical_Prescription> getPrescribedMedication(String med);
 
 	
 //rendez vous par specialité

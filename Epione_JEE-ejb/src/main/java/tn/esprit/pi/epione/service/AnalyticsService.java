@@ -24,6 +24,7 @@ import tn.esprit.pi.epione.iservices.AnalyticsServiceRemote;
 import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.CompteRendu;
 import tn.esprit.pi.epione.persistence.Doctor;
+import tn.esprit.pi.epione.persistence.Medical_Prescription;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
 import tn.esprit.pi.epione.persistence.Speciality;
@@ -55,7 +56,7 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 	/* count appointments by doctor */
 	@Override
 	public long countAppointmentsbyDoctor(int doc_id) {
-		int result = (int) em.createQuery("SELECT count(a) from Appointment a WHERE a.idDoctor = :id")
+		long result = (long) em.createQuery("SELECT count(a) from Appointment a WHERE a.doctor.id = :id")
 				.setParameter("id", doc_id).getSingleResult();
 
 		return result;
@@ -63,9 +64,9 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 
 	/* count appointments by patient */
 	@Override
-	public int countAppointmentsbyPatient(Patient p) {
-		int result = (int) em.createQuery("SELECT count(a) from Appointment a WHERE a.id = :id")
-				.setParameter("id", p.getId()).getSingleResult();
+	public long countAppointmentsbyPatient(int p) {
+		long result = (long) em.createQuery("SELECT count(a) from Appointment a WHERE a.patient.id = :id")
+				.setParameter("id", p).getSingleResult();
 
 		return result;
 	}
@@ -116,6 +117,9 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 		return query.getResultList();
 	}
 
+	
+	
+	/*Get opened used vacations by doctor */
 	@Override
 	public javax.json.JsonObject VacationsByDoctor(int doc_id) {
 
@@ -137,6 +141,8 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 
 		return succesBuilder.build();
 	}
+	
+	/* Get appointments by speciality */
 
 	@Override
 	public List<Appointment> AppointmentsBySpeciality(Speciality speciality) {
@@ -151,6 +157,7 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 	}
 
 	
+	/* Add compte rendu */
 	@Override
 	public javax.json.JsonObject addCompteRendu(String d, String p, String contenu, String document, String img) {
 		//System.out.println(d+"aaaaaaaaaa");
@@ -180,6 +187,26 @@ public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceR
 	@Override
 	public Doctor findDoctorById(int idDoctor) {
 		return em.find(Doctor.class, idDoctor);
+	}
+	
+	/*Get appointments by Pattern */
+
+	@Override
+	public List<Appointment> getAppointmentsByPattern(int pattern_id) {
+
+		TypedQuery<Appointment> query = em.createQuery(
+				"select c from Appointment c where c.pattern.id = ?1 ",
+				Appointment.class);
+		query.setParameter(1, pattern_id);
+
+		return query.getResultList();
+
+	}
+
+	@Override
+	public List<Medical_Prescription> getPrescribedMedication(String med) {
+		TypedQuery<Medical_Prescription> query = em.createQuery("select d from Medical_Prescription d where d.description LIKE '%"+med+"%'", Medical_Prescription.class);
+		return query.getResultList();
 	}
 
 
