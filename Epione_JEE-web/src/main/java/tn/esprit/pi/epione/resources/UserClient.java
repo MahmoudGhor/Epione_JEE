@@ -23,7 +23,7 @@ import tn.esprit.pi.epione.persistence.User;
 import tn.esprit.pi.epione.utils.GenerateToken;
 
 @Path("/user")
-@RequestScoped
+@javax.faces.bean.RequestScoped
 public class UserClient {
 
 	@EJB

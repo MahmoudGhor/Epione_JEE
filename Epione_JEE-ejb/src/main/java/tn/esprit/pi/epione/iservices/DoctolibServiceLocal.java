@@ -11,5 +11,7 @@ import tn.esprit.pi.epione.persistence.Doctor;
 
 public interface DoctolibServiceLocal {
 	
-	String get();
+	Doctor get(String path);
+	List<Doctor> getDoctorsbySpeciality(String speciality,int page);
+	
 }

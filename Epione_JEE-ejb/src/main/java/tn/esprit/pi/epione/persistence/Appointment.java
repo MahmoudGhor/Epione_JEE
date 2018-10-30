@@ -30,10 +30,12 @@ public class Appointment {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	private String description;
+	@JsonIgnore
 	@OneToOne(fetch= FetchType.EAGER)
 	private Medical_Prescription medical_Prescription;
 	@OneToOne(fetch= FetchType.EAGER)
 	private Rating rating;
+	
 	@JsonIgnore
 	@ManyToOne(fetch= FetchType.EAGER)
 	@JoinColumn(name="idDoctor",referencedColumnName="id",insertable=false, updatable=false)
@@ -42,6 +44,7 @@ public class Appointment {
 	@ManyToOne(fetch= FetchType.EAGER)
 	@JoinColumn(name="idPatient",referencedColumnName="id",insertable=false, updatable=false)
 	private Patient patient;
+	
 	@JsonIgnore
 	@OneToMany(mappedBy="appointment")
 	private List<Recommandation> recommandations;

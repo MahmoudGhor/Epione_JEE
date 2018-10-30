@@ -5,29 +5,37 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonObjectBuilder;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.print.Doc;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import tn.esprit.pi.epione.iservices.AnalyticsServiceLocal;
+import tn.esprit.pi.epione.iservices.AnalyticsServiceRemote;
 import tn.esprit.pi.epione.persistence.Appointment;
+import tn.esprit.pi.epione.persistence.CompteRendu;
 import tn.esprit.pi.epione.persistence.Doctor;
+import tn.esprit.pi.epione.persistence.Medical_Prescription;
 import tn.esprit.pi.epione.persistence.Patient;
+import tn.esprit.pi.epione.persistence.Pattern;
 import tn.esprit.pi.epione.persistence.Speciality;
 import tn.esprit.pi.epione.persistence.User;
 
 @Stateless
-
-public class AnalyticsService implements AnalyticsServiceLocal {
-	@PersistenceContext(unitName = "Epione_JEE-ejb"/* , type=PersistenceContextType.EXTENDED */)
+public class AnalyticsService implements AnalyticsServiceLocal,AnalyticsServiceRemote {
+	@PersistenceContext(unitName = "Epione_JEE-ejb")
 	EntityManager em;
+	
+	UserService us;
 
 	/* Get (count) treated patients */
 	@Override
@@ -40,25 +48,25 @@ public class AnalyticsService implements AnalyticsServiceLocal {
 	/* Get (count) canceled Appointments */
 	@Override
 	public long countCanceledAppointments() {
-		long result = (long) em.createQuery("SELECT  count(id) from Appointment where status=false").getSingleResult();
+		long result = (long) em.createQuery("SELECT  count(id) from Appointment where status=0").getSingleResult();
 
 		return result;
 	}
 
 	/* count appointments by doctor */
 	@Override
-	public int countAppointmentsbyDoctor(Doctor d) {
-		int result = (int) em.createQuery("SELECT count(a) from Appointment a WHERE a.idDoctor = :id")
-				.setParameter("id", d.getId()).getSingleResult();
+	public long countAppointmentsbyDoctor(int doc_id) {
+		long result = (long) em.createQuery("SELECT count(a) from Appointment a WHERE a.doctor.id = :id")
+				.setParameter("id", doc_id).getSingleResult();
 
 		return result;
 	}
 
 	/* count appointments by patient */
 	@Override
-	public int countAppointmentsbyPatient(Patient p) {
-		int result = (int) em.createQuery("SELECT count(a) from Appointment a WHERE a.id = :id")
-				.setParameter("id", p.getId()).getSingleResult();
+	public long countAppointmentsbyPatient(int p) {
+		long result = (long) em.createQuery("SELECT count(a) from Appointment a WHERE a.patient.id = :id")
+				.setParameter("id", p).getSingleResult();
 
 		return result;
 	}
@@ -66,16 +74,16 @@ public class AnalyticsService implements AnalyticsServiceLocal {
 	/* get doctors by region */
 	@Override
 	public List<Doctor> getDoctorsByRegion(String region) {
-		TypedQuery<Doctor> query = em.createQuery("select d from Doctor d where d.ville=?1", Doctor.class);
-		query.setParameter(1, region);
+		TypedQuery<Doctor> query = em.createQuery("select d from Doctor d where d.OfficeAdress LIKE '%"+region+"%'", Doctor.class);
 		return query.getResultList();
 	}
 
 	/* get all doctors by speciality */
 	@Override
 	public List<Doctor> getDoctorsBySpecialities(Speciality speciality) {
-		TypedQuery<Doctor> query = em.createQuery("select u from Doctor u where u.speciality=?1 ", Doctor.class);
-		query.setParameter(1, speciality);
+		TypedQuery<Doctor> query = em.createQuery("select u from Doctor u where u.speciality.speciality=?1 ",
+				Doctor.class);
+		query.setParameter(1, speciality.getSpeciality());
 		return query.getResultList();
 	}
 
@@ -109,4 +117,98 @@ public class AnalyticsService implements AnalyticsServiceLocal {
 		return query.getResultList();
 	}
 
+	
+	
+	/*Get opened used vacations by doctor */
+	@Override
+	public javax.json.JsonObject VacationsByDoctor(int doc_id) {
+
+		long query1 = (long) em
+				.createQuery("SELECT count(p) from Planning p where p.disponibility=1 and p.doctor.id=" + doc_id)
+				.getSingleResult();
+		long query2 = (long) em
+				.createQuery("SELECT count(p) from Planning p where p.disponibility=0 and p.doctor.id=" + doc_id)
+				.getSingleResult();
+		JsonObjectBuilder succesBuilder = Json.createObjectBuilder();
+		if (query2!=0) {
+			Float taux = (float) ((query1 * 100) / query2);
+			succesBuilder.add("Taux", taux);
+
+		}
+
+		succesBuilder.add("UsedVacations", query1);
+		succesBuilder.add("OpenedVacations", query2);
+
+		return succesBuilder.build();
+	}
+	
+	/* Get appointments by speciality */
+
+	@Override
+	public List<Appointment> AppointmentsBySpeciality(Speciality speciality) {
+
+		TypedQuery<Appointment> query = em.createQuery(
+				"select c from Appointment c where c.doctor = ( select t from User t where t.speciality.speciality = ?1 ) ",
+				Appointment.class);
+		query.setParameter(1, speciality.getSpeciality());
+
+		return query.getResultList();
+
+	}
+
+	
+	/* Add compte rendu */
+	@Override
+	public javax.json.JsonObject addCompteRendu(String d, String p, String contenu, String document, String img) {
+		//System.out.println(d+"aaaaaaaaaa");
+		//Doctor d1= findDoctorById(Integer.parseInt(d));
+		//Patient p1= findPatientById(Integer.parseInt(p));
+		Doctor d1 = em.find(Doctor.class, Integer.parseInt(d));
+		Patient p1 = em.find(Patient.class, Integer.parseInt(p));
+		
+		CompteRendu cr = new CompteRendu(p1, d1, contenu, img, document);
+		System.out.println(p1.getEmail());
+			
+					em.persist(cr);
+					return Json.createObjectBuilder().add("succes", "Compte rendu added successfully").build();
+			
+				
+	}
+	
+	
+	/********* find patient by id ************************************/
+	@Override
+	public Patient findPatientById(int idPatient) {
+		return em.find(Patient.class, idPatient);
+	}
+	
+	
+	/*********** find doctor by id *********************************/
+	@Override
+	public Doctor findDoctorById(int idDoctor) {
+		return em.find(Doctor.class, idDoctor);
+	}
+	
+	/*Get appointments by Pattern */
+
+	@Override
+	public List<Appointment> getAppointmentsByPattern(int pattern_id) {
+
+		TypedQuery<Appointment> query = em.createQuery(
+				"select c from Appointment c where c.pattern.id = ?1 ",
+				Appointment.class);
+		query.setParameter(1, pattern_id);
+
+		return query.getResultList();
+
+	}
+
+	@Override
+	public List<Medical_Prescription> getPrescribedMedication(String med) {
+		TypedQuery<Medical_Prescription> query = em.createQuery("select d from Medical_Prescription d where d.description LIKE '%"+med+"%'", Medical_Prescription.class);
+		return query.getResultList();
+	}
+
+
+	
 }

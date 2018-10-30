@@ -1,5 +1,7 @@
 package tn.esprit.pi.epione.iservices;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +44,8 @@ public interface UserServiceLocal {
 	public JsonObject markAchievedAppointment(int appointment);
 	public List<Appointment> getListAppointmentNotTreated(int idDoctor);
 	public List<Appointment> getListAppointmentForSpecificDate( int idDoctor , Date startDate , Date endDate );
+	public String getCaldendar() throws GeneralSecurityException, IOException;
+	public String setCalendar() throws GeneralSecurityException;
 	
 
 }
