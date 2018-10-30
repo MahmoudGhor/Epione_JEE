@@ -10,9 +10,12 @@ import tn.esprit.pi.epione.persistence.Appointment;
 public interface AppointmentSeviceLocal {
 
 	public JsonObject addAppointment (String description , int idDoctor , int idPatient , int pattern);
-	public JsonObject cancelAppointment (Appointment appointment);
-	public JsonObject updateAppointment (Appointment appointment);
-	public JsonObject removeAppointment (Appointment appointment);
+	
+	public JsonObject updateAppointment (int idPatient , int idAppointment, String description, int idDoctor,int pattern);
+	
+	public JsonObject cancelAppointment (int idPatient , int idAppointment);
+
+	public JsonObject removeAppointment (int idAppointment);
 
 	
 }
