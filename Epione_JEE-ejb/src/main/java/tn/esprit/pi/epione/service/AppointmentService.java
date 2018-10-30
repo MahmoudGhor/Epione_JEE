@@ -23,16 +23,20 @@ public class AppointmentService implements AppointmentSeviceLocal {
 	
 	@Override
 	public JsonObject addAppointment(String description , int idDoctor , int idPatient , int pattern) {
-		if (findPatientById(idPatient) != null) {
+		if ((findPatientById(idPatient) != null)&&(findDoctorById(idDoctor) != null)&&(em.find(Pattern.class, pattern) != null) ) {
 			if (em.find(Patient.class, idPatient).isActive() == true) {
 				if (em.find(Patient.class, idPatient).getConnected() == true) {
+					System.out.println("enter");
+					Patient _patient = em.find(Patient.class, idPatient);
+					Doctor _doctor = em.find(Doctor.class, idDoctor);
+					Pattern _pattern = em.find(Pattern.class, pattern);
 					Appointment a = new Appointment();
 					a.setStatus(Status.waiting);
 					a.setDate(new Date());
 					a.setDescription(description);
-					a.setPatient(findPatientById(idPatient));
-					a.setPattern(em.find(Pattern.class, pattern));
-					a.setDoctor(findDoctorById(idDoctor));
+					a.setPatient(_patient);
+					a.setPattern(_pattern);
+					a.setDoctor(_doctor);
 					em.persist(a);
 					return Json.createObjectBuilder().add("succes", "Appointment added successfully").build();
 				} else {
@@ -42,7 +46,7 @@ public class AppointmentService implements AppointmentSeviceLocal {
 				return Json.createObjectBuilder().add("error", "your account is disabled").build();
 			}
 		} else {
-			return Json.createObjectBuilder().add("error", "You are not a patient").build();
+			return Json.createObjectBuilder().add("error", "Patient or doctor or pattern not exist").build();
 		}
 	}
 

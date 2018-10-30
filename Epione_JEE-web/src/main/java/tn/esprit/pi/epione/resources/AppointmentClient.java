@@ -7,6 +7,7 @@ import javax.json.JsonValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -25,19 +26,16 @@ public class AppointmentClient {
 	@Path("/add")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addAppointment(JsonObject body) {
+	public Response addAppointment(@QueryParam("patient") int patient,@QueryParam("description") String description,@QueryParam("doctor") int doctor,@QueryParam("pattern") int pattern) {
 
 
 		
-		//int x = body.get("doctor");
-		
-		//System.out.println(x);
+			System.out.println(patient);
+			System.out.println(description);
+			System.out.println(doctor);
+			System.out.println(pattern);
 
-//		int idDoctor = (int) body.get("doctor");
-//
-//		System.out.println(idDoctor);
-		return null;
-//			return Response.ok(appointmentManager.addAppointment(description,idDoctor,idPatient,pattern)).build();
+			return Response.ok(appointmentManager.addAppointment(description,doctor,patient,pattern)).build();
 		
 	}
 }

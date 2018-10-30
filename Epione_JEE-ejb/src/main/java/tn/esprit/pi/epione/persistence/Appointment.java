@@ -37,11 +37,9 @@ public class Appointment {
 	
 	@JsonIgnore
 	@ManyToOne(fetch= FetchType.EAGER)
-	@JoinColumn(name="idDoctor",referencedColumnName="id",insertable=false, updatable=false)
 	private Doctor doctor;
 	@JsonIgnore
 	@ManyToOne(fetch= FetchType.EAGER)
-	@JoinColumn(name="idPatient",referencedColumnName="id",insertable=false, updatable=false)
 	private Patient patient;
 	
 	@JsonIgnore
