@@ -45,7 +45,7 @@ public class AnalyticsService implements AnalyticsServiceLocal, AnalyticsService
 	/* Get (count) treated patients */
 	@Override
 	public long countTreatedPatients() {
-		long result = (long) em.createQuery("SELECT DISTINCT count(idPatient) from Appointment where date < CURDATE()")
+		long result = (long) em.createQuery("SELECT DISTINCT count(idPatient) from Appointment where date < CURDATE() and status='confirmed'")
 				.getSingleResult();
 		return result;
 	}
@@ -53,7 +53,7 @@ public class AnalyticsService implements AnalyticsServiceLocal, AnalyticsService
 	/* Get (count) canceled Appointments */
 	@Override
 	public long countCanceledAppointments() {
-		long result = (long) em.createQuery("SELECT  count(id) from Appointment where status=0").getSingleResult();
+		long result = (long) em.createQuery("SELECT  count(id) from Appointment where status='canceled'").getSingleResult();
 
 		return result;
 	}
