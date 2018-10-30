@@ -18,7 +18,6 @@ import javax.websocket.server.PathParam;
 
 import tn.esprit.pi.epione.persistence.ChatMessage;
 import tn.esprit.pi.epione.persistence.Key;
-import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.util.MessageDecoder;
 import tn.esprit.pi.epione.util.MessageEncoder;
 
@@ -103,16 +102,15 @@ public class ServerEndpointQuest {
     
     public List<Key> getPatientId() {
     	
-    	ArrayList<Key> a = new ArrayList<Key>();
+    	ArrayList<Key> keys = new ArrayList<Key>();
     	Iterator<String> iterator = sessions.keySet().iterator(); 
         while (iterator.hasNext()) { 
         	Key k = new Key();
         	k.setKey(iterator.next());
-        	a.add(k);
+        	keys.add(k);
 		} 
         
-        return a;
+        return keys;
     }
-
-
+    
 }
