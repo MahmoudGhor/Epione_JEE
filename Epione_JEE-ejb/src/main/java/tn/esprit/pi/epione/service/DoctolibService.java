@@ -1,11 +1,17 @@
 package tn.esprit.pi.epione.service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.json.JsonObject;
+import javax.net.ssl.HttpsURLConnection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -207,6 +213,30 @@ public class DoctolibService implements DoctolibServiceLocal {
 		}
 
 		return liste_doc;
+	}
+
+	
+	/* Get Json from Doctolib page */
+	@Override
+	public String getFromJson(String path) {
+		String js="";
+        StringBuilder stringBuilder = new StringBuilder();
+		try {
+			URLConnection url = new URL("https://www.doctolib.fr/"+path+".json").openConnection();
+			url.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+			BufferedReader br = new BufferedReader(new InputStreamReader(url.getInputStream()));
+			String str = "";
+			
+			while (null != (str = br.readLine())) {
+				System.out.println(str);
+                stringBuilder.append(str);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		  
+	
+		return stringBuilder.toString();
 	}
 	
 	

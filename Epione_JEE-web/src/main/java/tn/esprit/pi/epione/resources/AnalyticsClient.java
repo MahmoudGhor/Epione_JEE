@@ -186,10 +186,27 @@ public class AnalyticsClient {
 			}
 		}
 		JsonObjectBuilder succesBuilder = Json.createObjectBuilder();
-		succesBuilder.add("Nombre", number);
+		succesBuilder.add(med, number);
+		succesBuilder.add("Date debut", Date1.toString());
+		succesBuilder.add("Date fin", Date2.toString());
+
 		
 		return succesBuilder.build();
 
 	}
+	
+	@Path("/patients/age/{age1}/{age2}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatientbyAgeRange(@PathParam("age1") int age1, @PathParam("age2") int age2) {
+		if (!AnalyticsService.getPatientsbyAgeRange(age1, age2).isEmpty()) {
+			return Response.ok(AnalyticsService.getPatientsbyAgeRange(age1, age2)).build();
+		} else {
+			return Response.ok("Il n'existe pas de patient dans cette tranche d'age").build();
+		}
 
+	}
+	
+	
+	
 }

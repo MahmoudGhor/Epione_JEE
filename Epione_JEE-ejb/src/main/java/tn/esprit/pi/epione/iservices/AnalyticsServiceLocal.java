@@ -24,24 +24,24 @@ public interface AnalyticsServiceLocal {
 
 	public long countAppointmentsbyDoctor(int doc_id); // done
 
-	public long countAppointmentsbyPatient(int p); //done
+	public long countAppointmentsbyPatient(int p); // done
 
 	public List<Doctor> getDoctorsByRegion(String region); // done
-	
+
 	public List<Appointment> getAppointmentsByDoctor(int doc_id); // done A TESTER
 
 	public List<Doctor> getDoctorsBySpecialities(Speciality speciality); // done
-	
+
 	public JsonObject VacationsByDoctor(int doc_id); // Open-Used Vacations
-	
-	public List<Appointment> AppointmentsBySpeciality(Speciality speciality); // Stats Count Appointments by Speciality A TESTER
+
+	public List<Appointment> AppointmentsBySpeciality(Speciality speciality); // Stats Count Appointments by Speciality
+																				// A TESTER
 
 	public List<Appointment> getAppointmentsByPattern(int pattern_id); // done
-	
-	public List<Medical_Prescription> getPrescribedMedication(String med);
 
+	public List<Medical_Prescription> getPrescribedMedication(String med); // done
+
+	public List<Patient> getPatientsbyAgeRange(int age1, int age2); // done
 	
-//rendez vous par specialité
-	// lage des patients
-	//
+
 }
