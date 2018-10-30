@@ -3,6 +3,7 @@ package tn.esprit.pi.epione.persistence;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +21,7 @@ public class Rating {
 	private String comment;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created_at;
-	@OneToOne(mappedBy="rating")
+	@OneToOne	
 	private Appointment appointment;
 	
 	public int getId() {

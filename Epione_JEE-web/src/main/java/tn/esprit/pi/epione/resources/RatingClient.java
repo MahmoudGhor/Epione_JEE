@@ -1,13 +1,14 @@
 package tn.esprit.pi.epione.resources;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -22,17 +23,56 @@ public class RatingClient {
 	
 	@EJB
 	RateServiceLocal rateManager;
-	public static List<Rating> empL = new ArrayList<Rating>();
 	
-	@Path("/add")
+	@Path("/add/{appId}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addRate(Rating r){
-		/*Rating r = new Rating();
-		r.setRate(rate);
-		r.setComment(comment);*/
-		System.out.println("add succ "+r.getId() );
-		return Response.ok(rateManager.AddRate(r)).build();
+	public Response addRate(Rating r,@PathParam("appId") int appId){
+		return Response.ok(rateManager.AddRate(r,appId)).build();
+	}
+	
+	@Path("get")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAll(){
+		return Response.ok(rateManager.getAllRates()).build();
+	}
+	
+	@Path("get/{appId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRateByAppointement(@PathParam("appId") int appId){
+		return Response.ok(rateManager.getRateByAppoitement(appId)).build();
+	}
+	
+	@Path("edit")
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response EditRate(Rating r) {
+		return Response.ok(rateManager.EditRate(r)).build();
+	}
+	
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{id}")
+	public Response deleteEmp (@PathParam("id") int id)
+	{
+		return Response.ok(rateManager.deleteRate(id)).build();
+	}
+	
+	@Path("patient/{paientUserName}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRatesByPatientUserName(@PathParam("paientUserName") String paientUserName){
+		return Response.ok(rateManager.getRatesByPatient(paientUserName)).build();
+	}
+	
+	@Path("doctor/{doctorUserName}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRatesByDoctorUserName(@PathParam("doctorUserName") String doctorUserName){
+		return Response.ok(rateManager.getRatesByDoctor(doctorUserName)).build();
 	}
 
 }

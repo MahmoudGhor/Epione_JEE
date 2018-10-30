@@ -33,8 +33,7 @@ public class Appointment {
 	@JsonIgnore
 	@OneToOne(fetch= FetchType.EAGER)
 	private Medical_Prescription medical_Prescription;
-	@OneToOne(fetch= FetchType.EAGER)
-	private Rating rating;
+
 	
 	@JsonIgnore
 	@ManyToOne(fetch= FetchType.EAGER)
@@ -80,12 +79,7 @@ public class Appointment {
 	public void setMedical_Prescription(Medical_Prescription medical_Prescription) {
 		this.medical_Prescription = medical_Prescription;
 	}
-	public Rating getRating() {
-		return rating;
-	}
-	public void setRating(Rating rating) {
-		this.rating = rating;
-	}
+
 	public Doctor getDoctor() {
 		return doctor;
 	}
