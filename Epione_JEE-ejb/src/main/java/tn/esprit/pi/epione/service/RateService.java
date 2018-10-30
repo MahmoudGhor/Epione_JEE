@@ -1,6 +1,7 @@
 package tn.esprit.pi.epione.service;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -55,17 +56,38 @@ public class RateService implements RateServiceLocal {
 
 	@Override
 	public List<Rating> getRatesByPatient(String paientUserName) {
-		TypedQuery<Rating> query = em.createQuery("SELECT r FROM Rating r where r.appointment.patient.username =:paientUserName", Rating.class);
+		TypedQuery<Rating> query = em.createQuery(
+				"SELECT r FROM Rating r where r.appointment.patient.username =:paientUserName", Rating.class);
 		return query.setParameter("paientUserName", paientUserName).getResultList();
 	}
 
 	@Override
 	public List<Rating> getRatesByDoctor(String doctorUserName) {
-		TypedQuery<Rating> query = em.createQuery("SELECT r FROM Rating r where r.appointment.doctor.username =:doctorUserName", Rating.class);
+		TypedQuery<Rating> query = em.createQuery(
+				"SELECT r FROM Rating r where r.appointment.doctor.username =:doctorUserName", Rating.class);
 		return query.setParameter("doctorUserName", doctorUserName).getResultList();
 	}
 
-	
-	
+	@Override
+	public double DoctorRate(int idDoctor) {
+		double TotalRate = 0;
+		/* count number of appointment for the doctor */
+		TypedQuery<Long> nbrDoc = em.createQuery(
+				"SELECT count(rate) FROM Rating r where r.appointment.doctor.id ="+idDoctor, Long.class);
+		
+		/* rate total for the doctor */
+		TypedQuery<Integer> rates = em.createQuery(
+				"SELECT rate FROM Rating r where r.appointment.doctor.id ="+idDoctor, Integer.class);
+		
+		List<Integer> r = rates.getResultList();
+		Iterator<Integer> iter =  r.iterator();
+		
+		while ( iter.hasNext())
+			TotalRate += iter.next();
+				
+		double avg = (TotalRate/nbrDoc.getSingleResult());
+		
+		return avg;
+	}
 
 }

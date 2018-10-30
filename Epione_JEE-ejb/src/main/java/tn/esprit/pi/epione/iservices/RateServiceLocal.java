@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.ejb.Local;
 
-import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Rating;
 
 @Local
@@ -17,5 +16,6 @@ public interface RateServiceLocal {
 	public List<Rating> getAllRates();
 	public int EditRate(Rating r);
 	public int deleteRate(int id);
+	public double DoctorRate(int idDoctor);
 
 }
