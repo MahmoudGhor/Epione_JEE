@@ -13,6 +13,9 @@ public class MessageEncoder implements Encoder.Text<ChatMessage> {
     public String encode(ChatMessage message) throws EncodeException {
         return Json.createObjectBuilder()
                        .add("message", message.getContent())
+                       .add("doctorName", message.getDoctorName())
+                       .add("patientName", message.getPatientName())
+                       .add("isPatient", message.getIsPatient())
                        .build().toString();
     }
 

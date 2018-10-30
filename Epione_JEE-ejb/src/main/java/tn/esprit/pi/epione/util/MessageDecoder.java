@@ -1,7 +1,6 @@
 package tn.esprit.pi.epione.util;
 
 import java.io.StringReader;
-import java.util.Date;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.websocket.DecodeException;
@@ -28,6 +27,9 @@ public class MessageDecoder implements Decoder.Text<ChatMessage> {
 		ChatMessage message = new ChatMessage();
         JsonObject jsonObject = Json.createReader(new StringReader(textMessage)).readObject();
         message.setContent(jsonObject.getString("message"));
+        message.setDoctorName(jsonObject.getString("doctorName"));
+        message.setPatientName(jsonObject.getString("patientName"));
+        message.setIsPatient(jsonObject.getString("isPatient"));
         return message;
 	}
 

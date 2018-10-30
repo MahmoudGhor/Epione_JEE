@@ -9,7 +9,7 @@
     <body>
         <div class="table">
             <div>
-                <span>Ptient id:</span>
+                <span>Patient id:</span>
                 <input id="keyToConnect" placeholder="id"/>
             </div>
             <button onclick="connect();return false;" class="button">Patient Connect</button>
@@ -28,14 +28,20 @@
             var ws;
             var yourKey;
             connect = function() {
+
+            	if(ws)
+					ws.close();
+                
                 yourKey = document.getElementById('keyToConnect').value;
                 var webSocketUrl = 'ws://localhost:18080/Epione_JEE-web/chat/quest/' + yourKey;
                 ws = new WebSocket(webSocketUrl);
                 ws.onopen = function() {
-                    appendMessage('info', 'WebSocket connection opened!');
+                	ws.send(JSON.stringify({'message': "", "doctorName": " ", "patientName" : "Patient "+yourKey,"isPatient" : "true"}));
+                    appendMessage('info', 'connection opened!');
                 };
                 ws.onmessage = function(event) {
-                    appendMessage('message', 'Doctor: '+event.data);
+                    var json = JSON.parse(event.data);
+                    appendMessage('message', json.doctorName+ ': '+json.message);
                 };
                 ws.onclose = function() {
                     appendMessage('warn', 'WebSocket closed');
@@ -48,11 +54,20 @@
             appendMessage = function(type, text) {
                 document.getElementById('messages').innerHTML += '<div class="' + type + '">' + text + '</div>';
             };
+            
             sendMessageToKey = function() {
                 var messageToKey = document.getElementById('messageToKey').value;
-                ws.send(messageToKey);
-                appendMessage('message', 'you > ' + yourKey + ': "' + messageToKey + '"');
+                ws.send(JSON.stringify({'message': messageToKey, "doctorName": " ", "patientName" : "Patient "+yourKey,"isPatient" : ""}));
+                document.getElementById('messageToKey').value = "";
+                appendMessage('message', 'you -> Doctors: "' + messageToKey + '"');
             };
+
+            window.onbeforeunload = closingSession;
+            function closingSession(){
+            	ws.onclose = function() {};
+            	ws.close(); 
+               return null;
+            }
         </script>
     </body>
 </html>

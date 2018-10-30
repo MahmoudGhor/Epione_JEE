@@ -5,28 +5,42 @@ import java.util.Date;
 public class ChatMessage {
 	
 	private String content;
-    private String sender;
-    private Date received;
-    
-    
+	private String doctorName;
+	private String patientName;
+	private String isPatient;
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getSender() {
-		return sender;
+
+	public String getDoctorName() {
+		return doctorName;
 	}
-	public void setSender(String sender) {
-		this.sender = sender;
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
 	}
-	public Date getReceived() {
-		return received;
+
+	public String getPatientName() {
+		return patientName;
 	}
-	public void setReceived(Date received) {
-		this.received = received;
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
 	}
-    
+
+	public String getIsPatient() {
+		return isPatient;
+	}
+
+	public void setIsPatient(String isPatient) {
+		this.isPatient = isPatient;
+	}
+	
+	
 
 }
