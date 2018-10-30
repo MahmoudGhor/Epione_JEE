@@ -61,7 +61,7 @@ public class RateService implements RateServiceLocal {
 
 	@Override
 	public List<Rating> getRatesByDoctor(String doctorUserName) {
-		TypedQuery<Rating> query = em.createQuery("SELECT r FROM Rating r where r.appointment.patient.username =:doctorUserName", Rating.class);
+		TypedQuery<Rating> query = em.createQuery("SELECT r FROM Rating r where r.appointment.doctor.username =:doctorUserName", Rating.class);
 		return query.setParameter("doctorUserName", doctorUserName).getResultList();
 	}
 
