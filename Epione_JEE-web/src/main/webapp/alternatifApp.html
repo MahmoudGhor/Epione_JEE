@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <title>Alternative Appointment</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+<body>
+	<div class="table">
+	
+		     <div>When user is connected</div>
+		     <div>
+		         <span>Username:</span>
+		         <input type="text" name="username" id="username"/>
+		     </div>
+		     <div>
+		         <span>Appointment Date:</span>
+		         <input type="datetime-local" name="date" id="date"/>
+		     </div>
+		     <input type="submit" value="Connect" onclick="connect();" class="button">
+
+     </div>
+      <form method="post" class="table" id="form">
+		     <div>Cancel Appointment</div>
+		     <div>
+		         <input disabled="disabled" type="text" name="datecancel" id="datecancel"/>
+		     </div>
+		     <input type="submit" value="Cancel" class="button">
+		 </form>
+     <div id="messages"></div>
+     <script type="text/javascript">
+
+	     connect = function() {
+		     
+		     var webSocketUrl = 'ws://localhost:18080/Epione_JEE-web/alternativeAppointment';
+		     ws = new WebSocket(webSocketUrl);
+
+		     ws.onopen = function() {
+		    	 ws.send(JSON.stringify({'msg': "", "date": document.getElementById('date').value }));
+		         appendMessage('info', 'Connected!');
+		     };
+		     ws.onmessage = function(event) {
+		     	 var json = JSON.parse(event.data);
+		         appendMessage('message', json.msg);
+		         document.getElementById('messages').innerHTML += '<input type="submit" value="Yes" id="yes"/><input type="submit" value="No" id="No"/>';
+		     };
+		     ws.onclose = function() {
+		         appendMessage('warn', 'WebSocket closed');
+		     };
+		     ws.onerror = function(err) {
+		         appendMessage(err);
+		     };
+
+		     document.getElementById('datecancel').value = document.getElementById('date').value;
+		     document.getElementById('form').action = 'epione/appointment/cancel/'+document.getElementById('date').value;
+
+	     }
+
+	     appendMessage = function(type, text) {
+             document.getElementById('messages').innerHTML += '<div class="' + type + '">' + text + '</div>';
+         };
+     
+     </script>
+        
+</body>
+</html>
