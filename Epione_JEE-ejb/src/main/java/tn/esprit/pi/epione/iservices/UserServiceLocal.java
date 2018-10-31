@@ -9,6 +9,7 @@ import javax.ejb.Local;
 import javax.enterprise.inject.Any;
 import javax.json.JsonObject;
 
+import tn.esprit.pi.epione.persistence.Admin;
 import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
@@ -46,6 +47,10 @@ public interface UserServiceLocal {
 	public List<Appointment> getListAppointmentForSpecificDate( int idDoctor , Date startDate , Date endDate );
 	public String getCaldendar() throws GeneralSecurityException, IOException;
 	public String setCalendar() throws GeneralSecurityException;
+	
+	public JsonObject updateDoctor(Doctor doctor);
+	public JsonObject updatePatient(Patient patient);
+	public JsonObject updateAdmin(Admin admin);
 	
 
 }

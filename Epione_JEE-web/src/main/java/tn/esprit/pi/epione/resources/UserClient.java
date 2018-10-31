@@ -19,6 +19,9 @@ import javax.ws.rs.core.Response;
 
 import tn.esprit.pi.epione.filters.Secured;
 import tn.esprit.pi.epione.iservices.UserServiceLocal;
+import tn.esprit.pi.epione.persistence.Admin;
+import tn.esprit.pi.epione.persistence.Doctor;
+import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.User;
 import tn.esprit.pi.epione.utils.GenerateToken;
 
@@ -80,6 +83,36 @@ public class UserClient {
 	public Response logOut(@PathParam("idUser") int idUser)
 	{
 		return Response.ok(userManager.logOut(idUser)).build();
+		
+	}
+	
+	/*************************** Update Doctor    ********************************************************/
+	@Path("/updateDoctor")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateDoctor(Doctor doctor)
+	{
+		return Response.ok(userManager.updateDoctor(doctor)).build();
+		
+	}
+	
+	/*************************** Update Patient    ********************************************************/
+	@Path("/updatePatient")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updatePatient(Patient patient)
+	{
+		return Response.ok(userManager.updatePatient(patient)).build();
+		
+	}
+	
+	/*************************** Update Admin    ********************************************************/
+	@Path("/updateAdmin")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateDoctor(Admin admin)
+	{
+		return Response.ok(userManager.updateAdmin(admin)).build();
 		
 	}
 

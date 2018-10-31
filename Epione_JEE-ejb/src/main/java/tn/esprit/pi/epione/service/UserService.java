@@ -23,6 +23,7 @@ import javax.persistence.TypedQuery;
 
 
 import tn.esprit.pi.epione.iservices.UserServiceLocal;
+import tn.esprit.pi.epione.persistence.Admin;
 import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
@@ -734,7 +735,176 @@ public class UserService implements UserServiceLocal {
 				System.out.printf("Event created: %s\n", event.getHtmlLink());
 				return event.getHtmlLink();
 		}
+
+
+
+		@Override
+		public JsonObject updateDoctor(Doctor doctor) {
+			if (em.find(Doctor.class, doctor.getId()) != null ) {
+				if (em.find(Doctor.class, doctor.getId()).isActive() == true) {
+					if (em.find(Doctor.class, doctor.getId()).getConnected() == true) {
+						
+							Doctor d = em.find(Doctor.class, doctor.getId());
+							if(doctor.getFirstname() != null)
+								d.setFirstname(doctor.getFirstname());
+							if(doctor.getLastname() != null)
+								d.setLastname(doctor.getLastname());
+							if(doctor.getBiography() != null)
+								d.setBiography(doctor.getBiography());
+							if(doctor.getOffice_Number() != null)
+								d.setOffice_Number(doctor.getOffice_Number());
+							if(doctor.getWebsite() != null)
+								d.setWebsite(doctor.getWebsite());
+							if(doctor.getPaymentMethod() != null)
+								d.setPaymentMethod(doctor.getPaymentMethod());
+							if(doctor.getOfficeAdress() != null)
+								d.setOfficeAdress(doctor.getOfficeAdress());
+							if(doctor.getRemboursement() != null)
+								d.setRemboursement(doctor.getRemboursement());
+							if(doctor.getUsername() != null)
+								d.setUsername(doctor.getUsername());
+							if(doctor.getDoctolib() != null)
+								d.setDoctolib(doctor.getDoctolib());
+							if(doctor.getPicture() != null)
+								d.setPicture(doctor.getPicture());
+							if(doctor.getDoctolib() != null)
+								d.setDoctolib(doctor.getDoctolib());
+							if(doctor.getDoctolib() != null)
+								d.setDoctolib(doctor.getDoctolib());
+							if((doctor.getEmail() != null)&&(Utils.emailValidator(doctor.getEmail())))
+								d.setEmail(doctor.getEmail());
+							if(doctor.getPassword() != null)
+							{
+							try {
+								d.setPassword(Utils.toMD5(doctor.getPassword()));
+							} catch (NoSuchAlgorithmException e) {
+								return Json.createObjectBuilder().add("error", "the password is too weak").build();
+							
+							}
+							}
+							
+							em.persist(d);
+							em.flush();
+
+						return Json.createObjectBuilder().add("succes", "Doctor updated successfully").build();
+					} else {
+						return Json.createObjectBuilder().add("error", "you must connect before").build();
+					}
+				} else {
+					return Json.createObjectBuilder().add("error", "your account is disabled").build();
+				}
+			} else {
+				return Json.createObjectBuilder().add("error", "Doctor not exist").build();
+			}
 		}
+
+
+
+		@Override
+		public JsonObject updatePatient(Patient patient) {
+			if (em.find(Patient.class, patient.getId()) != null ) {
+				if (em.find(Patient.class, patient.getId()).isActive() == true) {
+					if (em.find(Patient.class, patient.getId()).getConnected() == true) {
+						
+						Patient p = em.find(Patient.class, patient.getId());
+							if(patient.getFirstname() != null)
+								p.setFirstname(patient.getFirstname());
+							if(patient.getLastname() != null)
+								p.setLastname(patient.getLastname());
+							
+							if((patient.getEmail() != null)&&(Utils.emailValidator(patient.getEmail())))
+								p.setEmail(patient.getEmail());
+							if(patient.getCivil_status() != null)
+								p.setCivil_status(patient.getCivil_status());
+							if(patient.getBirthday() != null)
+								p.setBirthday(patient.getBirthday());
+							if(patient.getPhone() != null)
+								p.setPhone(patient.getPhone());
+							if(patient.getUsername() != null)
+								p.setUsername(patient.getUsername());
+							if(patient.getPicture() != null)
+								p.setPicture(patient.getPicture());
+	
+							if(patient.getPassword() != null)
+							{
+							try {
+								p.setPassword(Utils.toMD5(patient.getPassword()));
+							} catch (NoSuchAlgorithmException e) {
+								return Json.createObjectBuilder().add("error", "the password is too weak").build();
+							
+							}
+							}
+							
+							
+							em.persist(p);
+							em.flush();
+
+						return Json.createObjectBuilder().add("succes", "Patient updated successfully").build();
+					} else {
+						return Json.createObjectBuilder().add("error", "you must connect before").build();
+					}
+				} else {
+					return Json.createObjectBuilder().add("error", "your account is disabled").build();
+				}
+			} else {
+				return Json.createObjectBuilder().add("error", "Patient not exist").build();
+			}
+		}
+
+
+
+		@Override
+		public JsonObject updateAdmin(Admin admin) {
+			if (em.find(Patient.class, admin.getId()) != null ) {
+				if (em.find(Patient.class, admin.getId()).isActive() == true) {
+					if (em.find(Patient.class, admin.getId()).getConnected() == true) {
+						
+						Patient a = em.find(Patient.class, admin.getId());
+							if(admin.getFirstname() != null)
+								a.setFirstname(admin.getFirstname());
+							if(admin.getLastname() != null)
+								a.setLastname(admin.getLastname());
+							
+							if((admin.getEmail() != null)&&(Utils.emailValidator(admin.getEmail())))
+								a.setEmail(admin.getEmail());
+							if(admin.getCivil_status() != null)
+								a.setCivil_status(admin.getCivil_status());
+							if(admin.getBirthday() != null)
+								a.setBirthday(admin.getBirthday());
+							if(admin.getPhone() != null)
+								a.setPhone(admin.getPhone());
+							if(admin.getUsername() != null)
+								a.setUsername(admin.getUsername());
+							if(admin.getPicture() != null)
+								a.setPicture(admin.getPicture());
+	
+							if(admin.getPassword() != null)
+							{
+							try {
+								a.setPassword(Utils.toMD5(admin.getPassword()));
+							} catch (NoSuchAlgorithmException e) {
+								return Json.createObjectBuilder().add("error", "the password is too weak").build();
+							
+							}
+							}
+							
+							
+							em.persist(a);
+							em.flush();
+
+						return Json.createObjectBuilder().add("succes", "Admin updated successfully").build();
+					} else {
+						return Json.createObjectBuilder().add("error", "you must connect before").build();
+					}
+				} else {
+					return Json.createObjectBuilder().add("error", "your account is disabled").build();
+				}
+			} else {
+				return Json.createObjectBuilder().add("error", "User not exist").build();
+			}
+		}
+		
+}
 
 
 
