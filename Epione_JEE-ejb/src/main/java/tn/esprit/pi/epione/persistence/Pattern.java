@@ -18,6 +18,7 @@ public class Pattern {
 	private float price;
 	private String label;
 	private int periode;
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Doctor doctor;
 	private boolean isActif ;

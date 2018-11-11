@@ -3,16 +3,22 @@ package tn.esprit.pi.epione.service;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.EntityManager;
@@ -21,6 +27,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.mortbay.util.ajax.JSONObjectConvertor;
 
 import tn.esprit.pi.epione.iservices.UserServiceLocal;
 import tn.esprit.pi.epione.persistence.Admin;
@@ -28,10 +37,13 @@ import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
+import tn.esprit.pi.epione.persistence.Planning;
+import tn.esprit.pi.epione.persistence.Speciality;
 import tn.esprit.pi.epione.persistence.Status;
 import tn.esprit.pi.epione.persistence.User;
 import tn.esprit.pi.epione.util.Mail;
 import tn.esprit.pi.epione.util.Utils;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -708,7 +720,7 @@ public class UserService implements UserServiceLocal {
 				    new EventAttendee().setEmail("mahmoud.ghorbel@esprit.tn"),
 				};
 				event.setAttendees(Arrays.asList(attendees));
-
+			
 				EventReminder[] reminderOverrides = new EventReminder[] {
 				    new EventReminder().setMethod("email").setMinutes(24 * 60),
 				    new EventReminder().setMethod("popup").setMinutes(10),
@@ -739,172 +751,371 @@ public class UserService implements UserServiceLocal {
 
 
 		@Override
-		public JsonObject updateDoctor(Doctor doctor) {
-			if (em.find(Doctor.class, doctor.getId()) != null ) {
-				if (em.find(Doctor.class, doctor.getId()).isActive() == true) {
-					if (em.find(Doctor.class, doctor.getId()).getConnected() == true) {
-						
-							Doctor d = em.find(Doctor.class, doctor.getId());
-							if(doctor.getFirstname() != null)
-								d.setFirstname(doctor.getFirstname());
-							if(doctor.getLastname() != null)
-								d.setLastname(doctor.getLastname());
-							if(doctor.getBiography() != null)
-								d.setBiography(doctor.getBiography());
-							if(doctor.getOffice_Number() != null)
-								d.setOffice_Number(doctor.getOffice_Number());
-							if(doctor.getWebsite() != null)
-								d.setWebsite(doctor.getWebsite());
-							if(doctor.getPaymentMethod() != null)
-								d.setPaymentMethod(doctor.getPaymentMethod());
-							if(doctor.getOfficeAdress() != null)
-								d.setOfficeAdress(doctor.getOfficeAdress());
-							if(doctor.getRemboursement() != null)
-								d.setRemboursement(doctor.getRemboursement());
-							if(doctor.getUsername() != null)
-								d.setUsername(doctor.getUsername());
-							if(doctor.getDoctolib() != null)
-								d.setDoctolib(doctor.getDoctolib());
-							if(doctor.getPicture() != null)
-								d.setPicture(doctor.getPicture());
-							if(doctor.getDoctolib() != null)
-								d.setDoctolib(doctor.getDoctolib());
-							if(doctor.getDoctolib() != null)
-								d.setDoctolib(doctor.getDoctolib());
-							if((doctor.getEmail() != null)&&(Utils.emailValidator(doctor.getEmail())))
-								d.setEmail(doctor.getEmail());
-							if(doctor.getPassword() != null)
-							{
-							try {
-								d.setPassword(Utils.toMD5(doctor.getPassword()));
-							} catch (NoSuchAlgorithmException e) {
-								return Json.createObjectBuilder().add("error", "the password is too weak").build();
-							
-							}
-							}
-							
-							em.persist(d);
-							em.flush();
+	public JsonObject updateDoctor(Doctor doctor) {
+		if (em.find(Doctor.class, doctor.getId()) != null) {
+			if (em.find(Doctor.class, doctor.getId()).isActive() == true) {
+				if (em.find(Doctor.class, doctor.getId()).getConnected() == true) {
 
-						return Json.createObjectBuilder().add("succes", "Doctor updated successfully").build();
-					} else {
-						return Json.createObjectBuilder().add("error", "you must connect before").build();
+					Doctor d = em.find(Doctor.class, doctor.getId());
+					if (doctor.getFirstname() != null)
+						d.setFirstname(doctor.getFirstname());
+					if (doctor.getLastname() != null)
+						d.setLastname(doctor.getLastname());
+					if (doctor.getBiography() != null)
+						d.setBiography(doctor.getBiography());
+					if (doctor.getOffice_Number() != null)
+						d.setOffice_Number(doctor.getOffice_Number());
+					if (doctor.getWebsite() != null)
+						d.setWebsite(doctor.getWebsite());
+					if (doctor.getPaymentMethod() != null)
+						d.setPaymentMethod(doctor.getPaymentMethod());
+					if (doctor.getOfficeAdress() != null)
+						d.setOfficeAdress(doctor.getOfficeAdress());
+					if (doctor.getRemboursement() != null)
+						d.setRemboursement(doctor.getRemboursement());
+					if (doctor.getUsername() != null)
+						d.setUsername(doctor.getUsername());
+					if (doctor.getDoctolib() != null)
+						d.setDoctolib(doctor.getDoctolib());
+					if (doctor.getPicture() != null)
+						d.setPicture(doctor.getPicture());
+					if (doctor.getDoctolib() != null)
+						d.setDoctolib(doctor.getDoctolib());
+					if (doctor.getDoctolib() != null)
+						d.setDoctolib(doctor.getDoctolib());
+					if ((doctor.getEmail() != null) && (Utils.emailValidator(doctor.getEmail())))
+						d.setEmail(doctor.getEmail());
+					if (doctor.getPassword() != null) {
+						try {
+							d.setPassword(Utils.toMD5(doctor.getPassword()));
+						} catch (NoSuchAlgorithmException e) {
+							return Json.createObjectBuilder().add("error", "the password is too weak").build();
+
+						}
 					}
+
+					em.persist(d);
+					em.flush();
+
+					return Json.createObjectBuilder().add("succes", "Doctor updated successfully").build();
 				} else {
-					return Json.createObjectBuilder().add("error", "your account is disabled").build();
+					return Json.createObjectBuilder().add("error", "you must connect before").build();
 				}
 			} else {
-				return Json.createObjectBuilder().add("error", "Doctor not exist").build();
+				return Json.createObjectBuilder().add("error", "your account is disabled").build();
+			}
+		} else {
+			return Json.createObjectBuilder().add("error", "Doctor not exist").build();
+		}
+	}
+
+
+		/*********************** add a day time  ****************************/
+	@Override
+	public JsonObject addPlanningForOneDay(int idDoctor, Date day, Timestamp startTime, Timestamp endTime,
+			int timeMeeting) {
+
+		if (idDoctor != 0) {
+			if (findDoctorById(idDoctor) != null) {
+				Doctor doc = em.find(Doctor.class, idDoctor);
+				if (doc.isActive() == true) {
+					if (day != null) {
+						System.out.println("bbbbbbbbbbbbbbbbbb");
+						System.out.println(startTime);
+						System.out.println(endTime);
+						System.out.println("bbbbbbbbbbbbbbbbbb");
+						Planning plan = new Planning();
+						plan.setDay(day);
+						plan.setStart_at(startTime);
+						plan.setEnd_at(endTime);
+						plan.setDisponibility(false);
+						plan.setDoctor(doc);
+
+						em.persist(plan);
+						return Json.createObjectBuilder().add("succes", "your account has been activated successfully")
+								.build();
+					} else {
+						return Json.createObjectBuilder().add("error", "specify the day please!").build();
+					}
+
+				}
+				{
+					return Json.createObjectBuilder().add("error", "the doctor is disabled").build();
+				}
+			}
+
+			{
+				return Json.createObjectBuilder().add("error", "you are not a doctor").build();
 			}
 		}
+		{
+			return Json.createObjectBuilder().add("error", "no doctor inserted").build();
+		}
+	}
 
+
+		/************** select liste pattern by periode **********************/
+	@Override
+	public List<Pattern> selectListPatternByPeriode(int idDoctor, int periode) {
+		if (findDoctorById(idDoctor) != null) {
+			TypedQuery<Pattern> query = em.createQuery(
+					"select c from Pattern c where c.doctor = ( select t from User t where t.id = ?1 ) and c.periode = ?2 and c.isActif =1 ",
+					Pattern.class);
+			query.setParameter(1, idDoctor);
+			query.setParameter(2, periode);
+			return query.getResultList();
+		}
+		return Collections.emptyList();
+	}
+		
+		
+
+	@Override
+	public JsonObject updatePatient(Patient patient) {
+		if (em.find(Patient.class, patient.getId()) != null) {
+			if (em.find(Patient.class, patient.getId()).isActive() == true) {
+				if (em.find(Patient.class, patient.getId()).getConnected() == true) {
+
+					Patient p = em.find(Patient.class, patient.getId());
+					if (patient.getFirstname() != null)
+						p.setFirstname(patient.getFirstname());
+					if (patient.getLastname() != null)
+						p.setLastname(patient.getLastname());
+
+					if ((patient.getEmail() != null) && (Utils.emailValidator(patient.getEmail())))
+						p.setEmail(patient.getEmail());
+					if (patient.getCivil_status() != null)
+						p.setCivil_status(patient.getCivil_status());
+					if (patient.getBirthday() != null)
+						p.setBirthday(patient.getBirthday());
+					if (patient.getPhone() != null)
+						p.setPhone(patient.getPhone());
+					if (patient.getUsername() != null)
+						p.setUsername(patient.getUsername());
+					if (patient.getPicture() != null)
+						p.setPicture(patient.getPicture());
+
+					if (patient.getPassword() != null) {
+						try {
+							p.setPassword(Utils.toMD5(patient.getPassword()));
+						} catch (NoSuchAlgorithmException e) {
+							return Json.createObjectBuilder().add("error", "the password is too weak").build();
+
+						}
+					}
+
+					em.persist(p);
+					em.flush();
+
+					return Json.createObjectBuilder().add("succes", "Patient updated successfully").build();
+				} else {
+					return Json.createObjectBuilder().add("error", "you must connect before").build();
+				}
+			} else {
+				return Json.createObjectBuilder().add("error", "your account is disabled").build();
+			}
+		} else {
+			return Json.createObjectBuilder().add("error", "Patient not exist").build();
+		}
+	}
+		
+		
+		public static final Date END_OF_TIME;
+		public static final TimeZone UTC;
+
+	public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+	static {
+		UTC = TimeZone.getTimeZone("UTC");
+		TimeZone.setDefault(UTC);
+		final Calendar c = new GregorianCalendar(UTC);
+		c.set(1, 0, 1, 0, 0, 0);
+		c.set(Calendar.MILLISECOND, 0);
+
+		c.setTime(new Date(Long.MAX_VALUE));
+		END_OF_TIME = c.getTime();
+	}
 
 
 		@Override
-		public JsonObject updatePatient(Patient patient) {
-			if (em.find(Patient.class, patient.getId()) != null ) {
-				if (em.find(Patient.class, patient.getId()).isActive() == true) {
-					if (em.find(Patient.class, patient.getId()).getConnected() == true) {
-						
-						Patient p = em.find(Patient.class, patient.getId());
-							if(patient.getFirstname() != null)
-								p.setFirstname(patient.getFirstname());
-							if(patient.getLastname() != null)
-								p.setLastname(patient.getLastname());
-							
-							if((patient.getEmail() != null)&&(Utils.emailValidator(patient.getEmail())))
-								p.setEmail(patient.getEmail());
-							if(patient.getCivil_status() != null)
-								p.setCivil_status(patient.getCivil_status());
-							if(patient.getBirthday() != null)
-								p.setBirthday(patient.getBirthday());
-							if(patient.getPhone() != null)
-								p.setPhone(patient.getPhone());
-							if(patient.getUsername() != null)
-								p.setUsername(patient.getUsername());
-							if(patient.getPicture() != null)
-								p.setPicture(patient.getPicture());
-	
-							if(patient.getPassword() != null)
-							{
-							try {
-								p.setPassword(Utils.toMD5(patient.getPassword()));
-							} catch (NoSuchAlgorithmException e) {
-								return Json.createObjectBuilder().add("error", "the password is too weak").build();
-							
-							}
-							}
-							
-							
-							em.persist(p);
-							em.flush();
+	public JsonObject updateAdmin(Admin admin) {
+		if (em.find(Patient.class, admin.getId()) != null) {
+			if (em.find(Patient.class, admin.getId()).isActive() == true) {
+				if (em.find(Patient.class, admin.getId()).getConnected() == true) {
 
-						return Json.createObjectBuilder().add("succes", "Patient updated successfully").build();
-					} else {
-						return Json.createObjectBuilder().add("error", "you must connect before").build();
+					Patient a = em.find(Patient.class, admin.getId());
+					if (admin.getFirstname() != null)
+						a.setFirstname(admin.getFirstname());
+					if (admin.getLastname() != null)
+						a.setLastname(admin.getLastname());
+
+					if ((admin.getEmail() != null) && (Utils.emailValidator(admin.getEmail())))
+						a.setEmail(admin.getEmail());
+					if (admin.getCivil_status() != null)
+						a.setCivil_status(admin.getCivil_status());
+					if (admin.getBirthday() != null)
+						a.setBirthday(admin.getBirthday());
+					if (admin.getPhone() != null)
+						a.setPhone(admin.getPhone());
+					if (admin.getUsername() != null)
+						a.setUsername(admin.getUsername());
+					if (admin.getPicture() != null)
+						a.setPicture(admin.getPicture());
+
+					if (admin.getPassword() != null) {
+						try {
+							a.setPassword(Utils.toMD5(admin.getPassword()));
+						} catch (NoSuchAlgorithmException e) {
+							return Json.createObjectBuilder().add("error", "the password is too weak").build();
+
+						}
 					}
+
+					em.persist(a);
+					em.flush();
+
+					return Json.createObjectBuilder().add("succes", "Admin updated successfully").build();
 				} else {
-					return Json.createObjectBuilder().add("error", "your account is disabled").build();
+					return Json.createObjectBuilder().add("error", "you must connect before").build();
 				}
 			} else {
-				return Json.createObjectBuilder().add("error", "Patient not exist").build();
+				return Json.createObjectBuilder().add("error", "your account is disabled").build();
 			}
+		} else {
+			return Json.createObjectBuilder().add("error", "User not exist").build();
 		}
+	}
+	/******************** makePlanningforAnAppointment ********************************/
+	@Override
+	public JsonObject makePlanningForAnAppointment(int idAppointment, int idPlanning) {
+		if (idAppointment != 0 && idPlanning != 0) {
+			Appointment appointment = em.find(Appointment.class, idAppointment);
+			Planning planning = em.find(Planning.class, idPlanning);
+			if (appointment != null && planning != null) {
+				if (planning.isDisponibility() == false) {
+					int x = (planning.getEnd_at().getHours() * 60 + planning.getEnd_at().getMinutes())
+							- planning.getStart_at().getHours() * 60 + planning.getStart_at().getMinutes();
+					if (appointment.getPattern().getPeriode() == x) {
+						// Query query = em.createQuery("update a from
+						// Appointment a set a.")
+						final SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_24H_FULL_FORMAT);
+						sdf.setTimeZone(UTC);
+						appointment.setPlanning(planning);
+						planning.setDisponibility(true);
+						em.persist(appointment);
+						em.persist(planning);
+						String description = "Appointment : " + appointment.getPattern().getLabel() + " for "
+								+ appointment.getPatient().getFirstname() + " "
+								+ appointment.getPatient().getLastname();
+						Date endDate = planning.getEnd_at();
+						Date startDate = planning.getStart_at();
+						String dat1;
+						String dat2;
+						String summary = appointment.getPatient().getUsername();
+						// DateTimeFormatter formatter;
+						// formatter = new DateTimeFormatter();
+						// dat1=
+						// startDate.getYear()+"-"+startDate.getMonth()+"-"+startDate.getDate()+"T"+startDate.getHours()+":"+startDate.getMinutes()+":"+startDate.getSeconds()+"000Z";
+						// Date parseDate = formatter.parse(startDate);
+						// dat2=
+						// endDate.getYear()+"-"+endDate.getMonth()+"-"+endDate.getDate()+"T"+endDate.getHours()+":"+endDate.getMinutes()+":"+endDate.getSeconds()+"000Z";
 
+						JSONObject json = new JSONObject();
+						JSONArray array = new JSONArray();
+						JSONArray array1 = new JSONArray();
+						JSONObject item = new JSONObject();
+						JSONObject item1 = new JSONObject();
+						json.put("summary", summary);
 
+						item.put("dateTime", sdf.format(endDate));
+						item1.put("dateTime", sdf.format(startDate));
+						array.put(item);
+						array1.put(item1);
+						json.put("start", array1);
+						json.put("end", array);
 
-		@Override
-		public JsonObject updateAdmin(Admin admin) {
-			if (em.find(Patient.class, admin.getId()) != null ) {
-				if (em.find(Patient.class, admin.getId()).isActive() == true) {
-					if (em.find(Patient.class, admin.getId()).getConnected() == true) {
-						
-						Patient a = em.find(Patient.class, admin.getId());
-							if(admin.getFirstname() != null)
-								a.setFirstname(admin.getFirstname());
-							if(admin.getLastname() != null)
-								a.setLastname(admin.getLastname());
-							
-							if((admin.getEmail() != null)&&(Utils.emailValidator(admin.getEmail())))
-								a.setEmail(admin.getEmail());
-							if(admin.getCivil_status() != null)
-								a.setCivil_status(admin.getCivil_status());
-							if(admin.getBirthday() != null)
-								a.setBirthday(admin.getBirthday());
-							if(admin.getPhone() != null)
-								a.setPhone(admin.getPhone());
-							if(admin.getUsername() != null)
-								a.setUsername(admin.getUsername());
-							if(admin.getPicture() != null)
-								a.setPicture(admin.getPicture());
-	
-							if(admin.getPassword() != null)
-							{
-							try {
-								a.setPassword(Utils.toMD5(admin.getPassword()));
-							} catch (NoSuchAlgorithmException e) {
-								return Json.createObjectBuilder().add("error", "the password is too weak").build();
-							
-							}
-							}
-							
-							
-							em.persist(a);
-							em.flush();
+						json.put("description", description);
+						System.out.println("add this json to postman");
+						System.out.println(json.toString());
 
-						return Json.createObjectBuilder().add("succes", "Admin updated successfully").build();
+						return Json.createObjectBuilder().add("succes", "appointment is set for the planning").build();
+
 					} else {
-						return Json.createObjectBuilder().add("error", "you must connect before").build();
+						return Json.createObjectBuilder()
+								.add("error", "periode appointment not the same of the planning").build();
 					}
 				} else {
-					return Json.createObjectBuilder().add("error", "your account is disabled").build();
+					return Json.createObjectBuilder().add("error", "Planning already reserved").build();
 				}
+
 			} else {
-				return Json.createObjectBuilder().add("error", "User not exist").build();
+				return Json.createObjectBuilder().add("error", "fail to find appointment or planning").build();
 			}
+		} else {
+			return Json.createObjectBuilder().add("error", "issue wih the Appointment or the planning").build();
 		}
+	}
+
+
+	/********************** show appointments of the day ***************************/
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Appointment> selectAppointmentOfToday(int idDoctor) {
+		if (idDoctor != 0) {
+			if (findDoctorById(idDoctor) != null) {
+				Doctor doc = em.find(Doctor.class, idDoctor);
+				if (doc.isActive() == true) {
+					Date d = new Date();
+					TypedQuery<Appointment> query = em.createQuery(
+							"select c from Appointment c where c.doctor = ( select t from User t where t.id = ?1 ) and c.date = ?2 ",
+							Appointment.class);
+					query.setParameter(1, idDoctor);
+					query.setParameter(2, d);
+					return query.getResultList();
+
+				} else {
+					return (List<Appointment>) Json.createObjectBuilder().add("error", "Doctor is disabled").build();
+				}
+
+			} else {
+				return (List<Appointment>) Json.createObjectBuilder().add("error", "Doctor not fouds").build();
+			}
+
+		} else {
+			return (List<Appointment>) Json.createObjectBuilder().add("error", "issue wih the doctor").build();
+		}
+	}
+
+
+/*********************************** get liste doctors *****************************/
+	@Override
+	public List<Doctor> getListDoctors() {
+		System.out.println("wsel lahné 2");
+		TypedQuery<Doctor> query = em.createQuery("select c from Doctor c where c.active = ?1 ", Doctor.class);
+		query.setParameter(1, true);
+		return query.getResultList();
+
+	}
+
+
+	
+	
+	
+	
+	
+	
 		
 }
+		
+		
+		
+		
+		
+		
+
+
+
+
+
 
 
 

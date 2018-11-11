@@ -31,6 +31,7 @@ public class Doctor extends User {
 	private String Remboursement;
 	
 	@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<DoctorFormation> formations = new ArrayList<>();
 	
@@ -39,12 +40,14 @@ public class Doctor extends User {
 	private List<Appointment> appointments;
 	
 	@JsonProperty(access = Access.WRITE_ONLY)
+	@JsonIgnore
 	@OneToMany(mappedBy="doctor", fetch=FetchType.EAGER)
 	private List<Pattern> patterns;
 	
 	@OneToMany(mappedBy="doctor")
 	private List<CompteRendu> cr;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="doctor")
 	private List<Acts> acts;
 	@JsonIgnore
