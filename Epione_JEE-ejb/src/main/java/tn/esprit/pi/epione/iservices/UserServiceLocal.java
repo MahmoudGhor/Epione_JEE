@@ -57,6 +57,7 @@ public interface UserServiceLocal {
 	public JsonObject makePlanningForAnAppointment(int idAppointment, int idPlanning);
 	public List<Doctor> getListDoctors();
 	public List<Appointment> selectAppointmentOfToday(int idDoctor);
+	public User findUserByUserName(String username);
 	
 
 }

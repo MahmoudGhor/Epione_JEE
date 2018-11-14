@@ -109,6 +109,7 @@ public class UserService implements UserServiceLocal {
 		}
 		patient.setToken(Utils.tokenGenerator());
 		patient.setActive(false);
+		patient.setType("patient");
 		em.persist(patient);
 		em.flush();
 		JsonObjectBuilder succesBuilder = Json.createObjectBuilder();
@@ -155,6 +156,7 @@ public class UserService implements UserServiceLocal {
 		}
 		doctor.setToken(Utils.tokenGenerator());
 		doctor.setActive(false);
+		doctor.setType("doctor");
 		em.persist(doctor);
 		em.flush();
 		JsonObjectBuilder succesBuilder = Json.createObjectBuilder();
@@ -455,13 +457,15 @@ public class UserService implements UserServiceLocal {
 	
 		/*********************** Get user by userName ***********************************************************/
 	public User getUserByUserName(String username) {
+		System.out.println("wsell éééé");
+		System.out.println(username);
 		try {
-			User result = (User) em.createQuery("SELECT u from User u WHERE u.username = :username ")
-					.setParameter("username", username).getSingleResult();
-			System.out.println("aaaaaaaa");
-			System.out.println("" + result);
-			return result;
+			System.out.println("wsel welyeeeeeeeey");
+			TypedQuery<User> query = em.createQuery("select c from User c where c.username = ?1 ", User.class);
+			query.setParameter(1, username);
+			return query.getSingleResult();
 		} catch (NoResultException e) {
+			System.out.println("wsel lel catch yéééé");
 			return null;
 		}
 
@@ -1095,6 +1099,15 @@ public class UserService implements UserServiceLocal {
 		return query.getResultList();
 
 	}
+
+
+
+@Override
+public User findUserByUserName(String username) {
+	TypedQuery<User> query = em.createQuery("select c from User c where c.username = ?1 ", User.class);
+	query.setParameter(1, true);
+	return query.getSingleResult();
+}
 
 
 	
