@@ -11,6 +11,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import tn.esprit.pi.epione.persistence.ChatMessage;
 import tn.esprit.pi.epione.persistence.Key;
 
@@ -42,9 +44,9 @@ public class MessageRest {
     @Path("/PatientsQuestions")
     @Produces(MediaType.APPLICATION_JSON)
     
-    public List<Key> Patients() {
+    public Response Patients() {
     	List<Key> keys = new ArrayList<Key>();
     	keys.addAll(webSocketEndpoint.getPatientId());
-    	return keys;
+    	return Response.ok(keys).header("Access-Control-Allow-Origin", "*").build();
     }
 }

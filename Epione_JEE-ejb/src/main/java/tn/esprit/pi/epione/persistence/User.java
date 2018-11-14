@@ -16,9 +16,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @DiscriminatorColumn(name = "role")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 	@Id
