@@ -74,7 +74,6 @@ public class MedecinClient {
 	public Response addPattern(Map<String, String>map) {
 
 		User x = userManager.getUserByid(Integer.parseInt(map.get("idDoctor")));
-		
 			return Response.ok(userManager.addPattern((Doctor) x, map.get("label"),Integer.parseInt(map.get("price")), Integer.parseInt(map.get("periode")))).build();
 		}
 
@@ -144,8 +143,13 @@ public class MedecinClient {
 		
 	}
 	
-	
-	
+	/*********************** afficher list pattern by id *****************************/
+	@Path("/getPatternById/{idPattern}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatternById(@PathParam("idPattern") int idPattern) {
+		return Response.ok(userManager.findPatternById(idPattern)).build();
+	}
 	
 	
 	
