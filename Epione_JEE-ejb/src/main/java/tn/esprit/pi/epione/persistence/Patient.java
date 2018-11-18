@@ -7,13 +7,17 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 @Entity
 public class Patient extends User {
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="patient")
 	private List<Appointment> appointments;
+	@JsonIgnore
 	@OneToMany(mappedBy="patient")
 	private List<Notification> notifications = new ArrayList<>();
 	
