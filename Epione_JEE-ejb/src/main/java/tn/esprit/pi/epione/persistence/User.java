@@ -16,9 +16,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @DiscriminatorColumn(name = "role")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 	@Id
@@ -39,6 +41,7 @@ public class User {
 	private String password;
 	private String picture;
 	private String phone;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date created_at;
 	private boolean active;
 	@JsonIgnore
@@ -48,6 +51,9 @@ public class User {
 	@Temporal(TemporalType.DATE)
 	private Date lastConnect;
 	private Boolean connected;
+	private String type;
+	
+	
 
 	public int getId() {
 		return id;
@@ -200,6 +206,15 @@ public class User {
 	public void setConnected(Boolean connected) {
 		this.connected = connected;
 	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 	
 	
 

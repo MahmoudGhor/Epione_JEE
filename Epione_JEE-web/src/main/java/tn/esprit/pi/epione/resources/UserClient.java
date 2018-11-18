@@ -16,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import tn.esprit.pi.epione.filters.Secured;
 import tn.esprit.pi.epione.iservices.UserServiceLocal;
@@ -38,23 +39,28 @@ public class UserClient {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response signIn(User user) {
 		GenerateToken generateToken = new GenerateToken();
+		User user1 = userManager.getUserByUserName(user.getUsername());
 		if (user.getEmail() != null) {
 			JsonObject jsonObject = userManager.SignIn(user.getEmail(), user.getPassword());
 			if (jsonObject.containsKey("error")) {
-				return Response.ok(jsonObject).build();
+				return Response.status(Status.BAD_REQUEST).build();
 			} else {
 				jsonObject = jsonObjectToBuilder(jsonObject).add("token", generateToken.issueToken(user.getEmail()))
 						.build();
+				jsonObject = jsonObjectToBuilder(jsonObject).add("type", user.getType().toString()).build();
 				Connected_User.setUser(user); // get the connected user
 				return Response.ok(jsonObject).build();
 			}
 		} else {
 			JsonObject jsonObject = userManager.SignIn(user.getUsername(), user.getPassword());
 			if (jsonObject.containsKey("error")) {
-				return Response.ok(jsonObject).build();
+				return Response.status(Status.BAD_REQUEST).build();
 			} else {
 				jsonObject = jsonObjectToBuilder(jsonObject)
 						.add("token", generateToken.issueToken(user.getUsername())).build();
+				System.out.println("*************"+userManager.getUserByUserName(user.getUsername())+"------------");
+				
+				jsonObject = jsonObjectToBuilder(jsonObject).add("type", user1.getType()).build();
 				Connected_User.setUser(user); // get the connected user
 				return Response.ok(jsonObject).build();
 			}
@@ -114,6 +120,14 @@ public class UserClient {
 	{
 		return Response.ok(userManager.updateAdmin(admin)).build();
 		
+	}
+	/*************************** find user By id **************************************************/
+	@Path("/getUser/{user}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserByUserName(@PathParam("user")String username)
+	{
+		return Response.ok(userManager.getUserByUserName(username)).build();
 	}
 
 }

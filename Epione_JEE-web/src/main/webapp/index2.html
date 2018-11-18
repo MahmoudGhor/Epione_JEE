@@ -61,7 +61,7 @@
             connect = function(elem) {
 
             	if(ws){
-            		ws.send(JSON.stringify({'message': doc+" disconnected", "doctorName": "","patientName" : "","isPatient" : ""}));
+            		ws.send(JSON.stringify({'message': doc+" disconnected", "doctorName": "connectionClose","patientName" : "","isPatient" : ""}));
             		ws.close();
                 	}
 					
@@ -72,7 +72,7 @@
                 ws = new WebSocket(webSocketUrl);
                 ws.onopen = function() {
                     appendMessage('info', 'Connected! with Patient'+id);
-                    ws.send(JSON.stringify({'message': doc+" is connected", "doctorName": "","patientName" : "","isPatient" : ""}))
+                    ws.send(JSON.stringify({'message': doc+" is connected", "doctorName": "connectionOpen","patientName" : "","isPatient" : ""}))
                 };
                 ws.onmessage = function(event) {
                 	 var json = JSON.parse(event.data);
