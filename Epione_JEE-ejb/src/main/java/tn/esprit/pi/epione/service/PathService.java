@@ -21,6 +21,7 @@ import tn.esprit.pi.epione.persistence.Notification;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Recommandation;
 import tn.esprit.pi.epione.persistence.Speciality;
+import tn.esprit.pi.epione.persistence.User;
 
 
 
@@ -666,7 +667,7 @@ public class PathService implements PathServiceLocal{
 								
 						
 								
-								ListPatients.add(query.getResultList().get(i).getAppointment().getPatient());
+								ListPatients.add(em.find(Patient.class,query.getResultList().get(i).getAppointment().getPatient().getId()));
 								
 								
 								
@@ -679,5 +680,43 @@ public class PathService implements PathServiceLocal{
 			 }
 		  
 		
+			 @Override
+			 public Patient getPatientFromRecommandation(int recommandation){
+				 
+				 Recommandation r= em.find(Recommandation.class, recommandation);
+				Patient p= em.find(Patient.class,r.getAppointment().getPatient().getId());
+					
+					return p;
+				 
+				 
+				 
+			 }
+			 
+			 
+			 @Override
+			 public Doctor getDoctorFromRecommandation(int recommandation){
+				 
+				 Recommandation r= em.find(Recommandation.class, recommandation);
+				Doctor p= em.find(Doctor.class,r.getAppointment().getDoctor().getId());
+					
+					return p;
+				 
+				 
+				 
+			 }
+			 
+			 
+			 @Override
+			 public Doctor getRecommandedDoctorFromRecommandation(int recommandation){
+				 
+				 Recommandation r= em.find(Recommandation.class, recommandation);
+				Doctor p= em.find(Doctor.class,r.getDoctors().get(0).getId());
+					
+			return p;
+				 
+				 
+				 
+			 }
+			 
 		
 }
