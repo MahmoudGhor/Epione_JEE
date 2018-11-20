@@ -382,12 +382,8 @@ public class UserService implements UserServiceLocal {
 	@Override
 	public JsonObject deletePattern(Pattern pattern) {
 		System.out.println("wsel lehné");
-		System.out.println(pattern.getDoctor().getId());
 		System.out.println(pattern.getId());
-		
-		if (findDoctorById(pattern.getDoctor().getId()) != null) {
-			System.out.println("wsel lahné 2");
-			if (findPatternById(pattern.getId()) != null)
+		if (findPatternById(pattern.getId()) != null)
 			{
 				System.out.println("wsel lahné 3");
 			em.find(Pattern.class, pattern.getId()).setActif(false);
@@ -396,8 +392,6 @@ public class UserService implements UserServiceLocal {
 			else {
 				return Json.createObjectBuilder().add("error", "you are not allowed for this action").build();
 			}
-		}
-		return Json.createObjectBuilder().add("error", "you are not allowed for this action").build();
 
 	}
 
@@ -409,9 +403,26 @@ public class UserService implements UserServiceLocal {
 	public List<Pattern> getListPatternByMedecin(int idDoctor) {
 		if (findDoctorById(idDoctor) != null) {
 			TypedQuery<Pattern> query = em.createQuery(
-					"select c from Pattern c where c.doctor = ( select t from User t where t.id = ?1 ) ",
+					"select c from Pattern c where c.doctor = ( select t from User t where t.id = ?1 ) and c.isActif = ?2  ",
 					Pattern.class);
+			System.out.println("ena lennnnnnnnnnnnnnnnna");
 			query.setParameter(1, idDoctor);
+			query.setParameter(2, true);
+			return query.getResultList();
+		}
+		return Collections.emptyList();
+	}
+	
+	/*************************  get list disabled pattern of a doctor  *************************************************/
+	@Override
+	public List<Pattern> getListPatternDisabledByMedecin(int idDoctor) {
+		if (findDoctorById(idDoctor) != null) {
+			TypedQuery<Pattern> query = em.createQuery(
+					"select c from Pattern c where c.doctor = ( select t from User t where t.id = ?1 ) and c.isActif = ?2  ",
+					Pattern.class);
+			System.out.println("ena lennnnnnnnnnnnnnnnna");
+			query.setParameter(1, idDoctor);
+			query.setParameter(2, false);
 			return query.getResultList();
 		}
 		return Collections.emptyList();
@@ -1101,13 +1112,37 @@ public class UserService implements UserServiceLocal {
 	}
 
 
+/*********************** find user by username ************************************/
+	@Override
+	public User findUserByUserName(String username) {
+		TypedQuery<User> query = em.createQuery("select c from User c where c.username = ?1 ", User.class);
+		query.setParameter(1, true);
+		return query.getSingleResult();
+	}
 
-@Override
-public User findUserByUserName(String username) {
-	TypedQuery<User> query = em.createQuery("select c from User c where c.username = ?1 ", User.class);
-	query.setParameter(1, true);
-	return query.getSingleResult();
-}
+/*************  update pattern  ************************/
+
+	@Override
+	public JsonObject updatePattern(Pattern pattern) {
+		if (em.find(Pattern.class, pattern.getId()) != null) {
+			Pattern pat = em.find(Pattern.class, pattern.getId());
+			if (pattern.getLabel() != null) {
+				pat.setLabel(pattern.getLabel());
+			}
+			if (pattern.getPeriode() != 0) {
+				pat.setPeriode(pattern.getPeriode());
+			}
+			if (pattern.getPrice() != 0) {
+				pat.setPrice(pattern.getPrice());
+			}
+			em.persist(pat);
+			em.flush();
+
+			return Json.createObjectBuilder().add("succes", "Pattern updated successfully").build();
+		} else {
+			return Json.createObjectBuilder().add("error", "Pattern not exist").build();
+		}
+	}
 
 
 	

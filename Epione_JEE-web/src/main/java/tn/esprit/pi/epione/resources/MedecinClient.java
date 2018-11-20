@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import tn.esprit.pi.epione.iservices.UserServiceLocal;
+import tn.esprit.pi.epione.persistence.Admin;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
@@ -131,6 +132,15 @@ public class MedecinClient {
 		return Response.ok(userManager.getListPatternByMedecin(idDoctor)).build();
 	}
 	
+	/*********************** afficher list disabled patterns by doctor *****************************/
+	@Path("/getListDisabledPatternByDoctor/{idDoctor}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getListDisabledPatternByMedecin(@PathParam("idDoctor") int idDoctor)
+	{
+		return Response.ok(userManager.getListPatternDisabledByMedecin(idDoctor)).build();
+	}
+	
 	
 	
 	/********************* delete pattern ***********************************/
@@ -149,6 +159,17 @@ public class MedecinClient {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPatternById(@PathParam("idPattern") int idPattern) {
 		return Response.ok(userManager.findPatternById(idPattern)).build();
+	}
+	
+	/*************************** Update pattern    ********************************************************/
+	@Path("/updatePattern")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateDoctor(Pattern pattern)
+	{
+		System.out.println("99999"+pattern.getLabel()+"--------"+pattern.getId());
+		return Response.ok(userManager.updatePattern(pattern)).build();
+		
 	}
 	
 	

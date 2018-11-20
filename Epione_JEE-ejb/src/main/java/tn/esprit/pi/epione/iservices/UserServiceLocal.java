@@ -11,6 +11,8 @@ import javax.ejb.Local;
 import javax.enterprise.inject.Any;
 import javax.json.JsonObject;
 
+import org.json.JSONObject;
+
 import tn.esprit.pi.epione.persistence.Admin;
 import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
@@ -58,6 +60,7 @@ public interface UserServiceLocal {
 	public List<Doctor> getListDoctors();
 	public List<Appointment> selectAppointmentOfToday(int idDoctor);
 	public User findUserByUserName(String username);
-	
+	public JsonObject updatePattern(Pattern pattern);
+	public List<Pattern> getListPatternDisabledByMedecin(int idDoctor);
 
 }
