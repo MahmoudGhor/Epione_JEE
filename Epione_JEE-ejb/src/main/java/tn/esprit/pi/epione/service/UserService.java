@@ -847,7 +847,7 @@ public class UserService implements UserServiceLocal {
 						plan.setDoctor(doc);
 
 						em.persist(plan);
-						return Json.createObjectBuilder().add("succes", "your account has been activated successfully")
+						return Json.createObjectBuilder().add("succes", "your planning has been added successfully")
 								.build();
 					} else {
 						return Json.createObjectBuilder().add("error", "specify the day please!").build();
@@ -1143,6 +1143,23 @@ public class UserService implements UserServiceLocal {
 			return Json.createObjectBuilder().add("error", "Pattern not exist").build();
 		}
 	}
+
+
+
+@Override
+public JsonObject enablePattern(Pattern pattern) {
+	System.out.println("wsel lehné");
+	System.out.println(pattern.getId());
+	if (findPatternById(pattern.getId()) != null)
+		{
+			System.out.println("wsel lahné 3");
+		em.find(Pattern.class, pattern.getId()).setActif(true);
+		return Json.createObjectBuilder().add("succes", "Pattern enabled").build();
+		}
+		else {
+			return Json.createObjectBuilder().add("error", "you are not allowed for this action").build();
+		}
+}
 
 
 	

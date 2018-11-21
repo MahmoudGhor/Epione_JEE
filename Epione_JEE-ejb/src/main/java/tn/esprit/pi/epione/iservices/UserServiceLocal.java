@@ -32,6 +32,7 @@ public interface UserServiceLocal {
 	public Pattern findPatternById (int idPattern); //ok
 	public JsonObject modifyPeriodePattern(int idPattern, int periode); //ok
 	public JsonObject deletePattern(Pattern pattern);
+	public JsonObject enablePattern(Pattern pattern);
 	public Pattern findPatternByDescriptionAndDoctor (String pattern ,int idDoctor );
 	public List<Pattern> getListPatternByMedecin (int idDoctor);
 	public JsonObject modifyPatternDescription(int idPattern , String pattern);

@@ -153,6 +153,16 @@ public class MedecinClient {
 		
 	}
 	
+	/********************* enable pattern ***********************************/
+	@Path("/enablePattern")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response enablePattern(Pattern p)
+	{
+		return Response.ok(userManager.enablePattern(p)).build();
+		
+	}
+	
 	/*********************** afficher list pattern by id *****************************/
 	@Path("/getPatternById/{idPattern}")
 	@GET
