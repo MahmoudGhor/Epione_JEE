@@ -226,12 +226,12 @@ public class MedecinClient {
 	
 	
 	/******************** get list of all appointment no treated yet **************************/
-	@Path("/NotAchievedAppointments")
-	@POST
+	@Path("/NotAchievedAppointments/{idDoctor}")
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getAllNotAchievedAppointments(Map<String, String> map) {
-		return Response.ok(userManager.getListAppointmentNotTreated(Integer.parseInt(map.get("idDoctor")))).build();
+	public Response getAllNotAchievedAppointments(@PathParam("idDoctor") int idDoctor) {
+		return Response.ok(userManager.getListAppointmentNotTreated(idDoctor)).build();
 	}
 	
 	
@@ -426,6 +426,19 @@ public class MedecinClient {
 		else {
 		return Response.ok(userManager.selectAppointmentOfToday(Integer.parseInt(map.get("idDoctor")))).build();
 		}
+	}
+	
+	
+	/********************* reject appointment************************************/
+	@Path("/reject")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response rejectAppointment (Map<String, String>map)
+	{
+		
+		return Response.ok(userManager.rejectAppointment(Integer.parseInt(map.get("id")))).build();
+		
 	}
 	
 	

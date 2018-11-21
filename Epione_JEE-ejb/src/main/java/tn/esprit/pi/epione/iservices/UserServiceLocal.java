@@ -47,6 +47,7 @@ public interface UserServiceLocal {
 	public JsonObject logOut (int idUser);
 	public Doctor getDoctorFromAppointment(int appointment);
 	public JsonObject treatAppointment(int appointment, Status newstate);
+	public JsonObject rejectAppointment(int appointment);
 	public JsonObject markAchievedAppointment(int appointment);
 	public List<Appointment> getListAppointmentNotTreated(int idDoctor);
 	public List<Appointment> getListAppointmentForSpecificDate( int idDoctor , Date startDate , Date endDate );

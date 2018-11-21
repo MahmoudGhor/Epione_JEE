@@ -1162,6 +1162,27 @@ public JsonObject enablePattern(Pattern pattern) {
 }
 
 
+
+@Override
+public JsonObject rejectAppointment(int appointment) {
+	if (appointment != 0) {
+		if (em.find(Appointment.class, appointment).getStatus() != Status.achieved) {
+			Appointment appoint = em.find(Appointment.class, appointment);
+			appoint.setStatus(Status.refused);
+			em.persist(appoint);
+			em.flush();
+			return Json.createObjectBuilder().add("succes", "Status updated Successfully")
+					.add("appointment id", appoint.getId()).build();
+		} else {
+			return Json.createObjectBuilder().add("error", "appontment already achieved").build();
+		}
+
+	} else {
+		return Json.createObjectBuilder().add("error", "appointment does not exist").build();
+	}
+}
+
+
 	
 	
 	
