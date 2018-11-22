@@ -18,6 +18,7 @@ import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
+import tn.esprit.pi.epione.persistence.Planning;
 import tn.esprit.pi.epione.persistence.Status;
 import tn.esprit.pi.epione.persistence.User;
 
@@ -64,5 +65,6 @@ public interface UserServiceLocal {
 	public User findUserByUserName(String username);
 	public JsonObject updatePattern(Pattern pattern);
 	public List<Pattern> getListPatternDisabledByMedecin(int idDoctor);
+	public List<Planning> getListePlanning(int idDoctor);
 
 }

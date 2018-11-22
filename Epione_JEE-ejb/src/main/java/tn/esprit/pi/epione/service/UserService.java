@@ -328,6 +328,7 @@ public class UserService implements UserServiceLocal {
 	@Override
 	public Doctor findDoctorById(int idDoctor) {
 		return em.find(Doctor.class, idDoctor);
+		
 	}
 	
 	
@@ -1180,6 +1181,15 @@ public JsonObject rejectAppointment(int appointment) {
 	} else {
 		return Json.createObjectBuilder().add("error", "appointment does not exist").build();
 	}
+}
+
+
+/***********************  get list planning of doctor  **************************************************/
+@Override
+public List<Planning> getListePlanning(int idDoctor) {
+	TypedQuery<Planning> query = em.createQuery("select c from Planning c where c.doctor = ( select t from User t where t.id = ?1 ) ", Planning.class);
+	query.setParameter(1, idDoctor);
+	return query.getResultList();
 }
 
 
