@@ -41,7 +41,7 @@ public interface AnalyticsServiceLocal {
 
 	public List<Medical_Prescription> getPrescribedMedication(String med); // done
 
-	public List<Patient> getPatientsbyAgeRange(int age1, int age2); // done
+	public List<Object> getPatientsbyAgeRange(int age1, int age2); // done
 	
 	public List<Patient> getPatientsByDoctor(int doc_id);
 	
