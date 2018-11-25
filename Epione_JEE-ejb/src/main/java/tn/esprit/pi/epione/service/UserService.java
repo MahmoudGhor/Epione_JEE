@@ -175,6 +175,7 @@ public class UserService implements UserServiceLocal {
 	
 	/***************************************** Sign In ************************************************/
 	public JsonObject SignIn(String usernameOrEmail, String password) {
+		System.out.println("login");
 		try {
 
 			password = Utils.toMD5(password);

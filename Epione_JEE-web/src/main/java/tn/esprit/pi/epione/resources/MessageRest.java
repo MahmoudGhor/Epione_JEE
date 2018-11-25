@@ -9,6 +9,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,13 +25,14 @@ public class MessageRest {
     ServerEndpointQuest webSocketEndpoint;
     
     @POST
-    @Path("/send")
-    public void sendMessage(@FormParam("key") String key, @FormParam("message") String message,@FormParam("doctorName") String doctorName ) {
-    	ChatMessage msg = new ChatMessage();
-    	msg.setContent(message);
-    	msg.setDoctorName(doctorName);
-    	msg.setPatientName(" ");	
-    	msg.setIsPatient(" ");
+    @Path("/send/{key}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void sendMessage(ChatMessage msg, @PathParam("key") String key) {
+    	//ChatMessage msg = new ChatMessage();
+    	//msg.setContent(message);
+    	//msg.setDoctorName(doctorName);
+    	//msg.setPatientName(" ");	
+    	//msg.setIsPatient(" ");
         webSocketEndpoint.send(msg, key);
     }
         /*User user = Connected_User.getUser();

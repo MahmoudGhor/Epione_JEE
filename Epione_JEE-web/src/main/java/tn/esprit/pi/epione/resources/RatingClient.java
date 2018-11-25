@@ -55,7 +55,7 @@ public class RatingClient {
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public Response deleteEmp (@PathParam("id") int id)
+	public Response deleteRate (@PathParam("id") int id)
 	{
 		return Response.ok(rateManager.deleteRate(id)).build();
 	}

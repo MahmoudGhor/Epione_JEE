@@ -20,16 +20,16 @@ public class RateService implements RateServiceLocal {
 	EntityManager em;
 
 	@Override
-	public int AddRate(Rating r,int AppId) {
+	public Rating AddRate(Rating r,int AppId) {
 		/* verify the rate */
 		if(r.getRate()<0 || r.getRate()>5)
-			return -1;
+			return null;
 		em.persist(r);
 		r.setCreated_at(new Date());
 		Appointment app = em.find(Appointment.class, AppId);
 		System.out.println(app.getId());
 		r.setAppointment(app);
-		return r.getId();
+		return r;
 	}
 
 	@Override

@@ -64,13 +64,7 @@ public class ServerEndpointQuest {
     @OnClose
     public void onClose(Session session, @PathParam("key") String key) {
     	
-    	String isPatient = (String) session.getUserProperties().get("typeUser");
-    	if(isPatient.equals("true")){
-    		sessions.remove(key);
-    	}
-    	else{
-    		sessions.get(key).remove(session);
-    	}
+    	sessions.get(key).remove(session);
     }
 
     @OnError

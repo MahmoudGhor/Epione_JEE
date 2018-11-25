@@ -9,7 +9,7 @@ import tn.esprit.pi.epione.persistence.Rating;
 @Local
 public interface RateServiceLocal {
 	
-	public int AddRate(Rating r,int AppId);
+	public Rating AddRate(Rating r,int AppId);
 	public Rating getRateByAppoitement(int AppId);
 	public List<Rating> getRatesByPatient(String paientUserName);
 	public List<Rating> getRatesByDoctor(String doctorUserName);
