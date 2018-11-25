@@ -453,6 +453,29 @@ public class MedecinClient {
 	}
 	
 	
+	/******************* get info doctor *****************************************/
+	@Path("/getInfoDoctor/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDetailConnectedDoctor(@PathParam("id") int id)
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.findDoctorById(id)).build();
+	}
+	
+	
+	/******************* get info doctor *****************************************/
+	@Path("/getPlanningDoctor/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPlanningDoctor(@PathParam("id") int id)
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getListePlanning(id)).build();
+	}
+	
+	
+	
 
 	
 }
