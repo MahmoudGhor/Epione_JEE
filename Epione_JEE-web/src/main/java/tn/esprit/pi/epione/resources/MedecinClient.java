@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import tn.esprit.pi.epione.iservices.UserServiceLocal;
+import tn.esprit.pi.epione.persistence.Admin;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
@@ -74,7 +75,6 @@ public class MedecinClient {
 	public Response addPattern(Map<String, String>map) {
 
 		User x = userManager.getUserByid(Integer.parseInt(map.get("idDoctor")));
-		
 			return Response.ok(userManager.addPattern((Doctor) x, map.get("label"),Integer.parseInt(map.get("price")), Integer.parseInt(map.get("periode")))).build();
 		}
 
@@ -132,6 +132,15 @@ public class MedecinClient {
 		return Response.ok(userManager.getListPatternByMedecin(idDoctor)).build();
 	}
 	
+	/*********************** afficher list disabled patterns by doctor *****************************/
+	@Path("/getListDisabledPatternByDoctor/{idDoctor}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getListDisabledPatternByMedecin(@PathParam("idDoctor") int idDoctor)
+	{
+		return Response.ok(userManager.getListPatternDisabledByMedecin(idDoctor)).build();
+	}
+	
 	
 	
 	/********************* delete pattern ***********************************/
@@ -144,8 +153,34 @@ public class MedecinClient {
 		
 	}
 	
+	/********************* enable pattern ***********************************/
+	@Path("/enablePattern")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response enablePattern(Pattern p)
+	{
+		return Response.ok(userManager.enablePattern(p)).build();
+		
+	}
 	
+	/*********************** afficher list pattern by id *****************************/
+	@Path("/getPatternById/{idPattern}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatternById(@PathParam("idPattern") int idPattern) {
+		return Response.ok(userManager.findPatternById(idPattern)).build();
+	}
 	
+	/*************************** Update pattern    ********************************************************/
+	@Path("/updatePattern")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateDoctor(Pattern pattern)
+	{
+		System.out.println("99999"+pattern.getLabel()+"--------"+pattern.getId());
+		return Response.ok(userManager.updatePattern(pattern)).build();
+		
+	}
 	
 	
 	
@@ -191,12 +226,12 @@ public class MedecinClient {
 	
 	
 	/******************** get list of all appointment no treated yet **************************/
-	@Path("/NotAchievedAppointments")
-	@POST
+	@Path("/NotAchievedAppointments/{idDoctor}")
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getAllNotAchievedAppointments(Map<String, String> map) {
-		return Response.ok(userManager.getListAppointmentNotTreated(Integer.parseInt(map.get("idDoctor")))).build();
+	public Response getAllNotAchievedAppointments(@PathParam("idDoctor") int idDoctor) {
+		return Response.ok(userManager.getListAppointmentNotTreated(idDoctor)).build();
 	}
 	
 	
@@ -394,6 +429,19 @@ public class MedecinClient {
 	}
 	
 	
+	/********************* reject appointment************************************/
+	@Path("/reject")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response rejectAppointment (Map<String, String>map)
+	{
+		
+		return Response.ok(userManager.rejectAppointment(Integer.parseInt(map.get("id")))).build();
+		
+	}
+	
+	
 	/******************* get liste medecin *****************************************/
 	@Path("/getListDoctors")
 	@GET
@@ -403,6 +451,29 @@ public class MedecinClient {
 		System.out.println("wsel lehné");
 		return Response.ok(userManager.getListDoctors()).build();
 	}
+	
+	
+	/******************* get info doctor *****************************************/
+	@Path("/getInfoDoctor/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDetailConnectedDoctor(@PathParam("id") int id)
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.findDoctorById(id)).build();
+	}
+	
+	
+	/******************* get info doctor *****************************************/
+	@Path("/getPlanningDoctor/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPlanningDoctor(@PathParam("id") int id)
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getListePlanning(id)).build();
+	}
+	
 	
 	
 

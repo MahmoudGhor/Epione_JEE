@@ -213,13 +213,18 @@ public class AnalyticsService implements AnalyticsServiceLocal, AnalyticsService
 
 	/* get patients by age range */
 	@Override
-	public List<Patient> getPatientsbyAgeRange(int age1, int age2) {
+	public List<Object> getPatientsbyAgeRange(int age1, int age2) {
+		String query0 = "select count(id) from Patient p where YEAR(CURRENT_DATE)-YEAR(p.birthday) BETWEEN ?1 and ?2";
+		Query q = em.createQuery(query0);
+		q.setParameter(1, age1);
+		q.setParameter(2, age2);
+		
 		TypedQuery<Patient> query = em.createQuery(
 				"select p from Patient p where YEAR(CURRENT_DATE)-YEAR(p.birthday) BETWEEN ?1 and ?2 ", Patient.class);
 		query.setParameter(1, age1);
 		query.setParameter(2, age2);
 
-		return query.getResultList();
+		return q.getResultList();
 	}
 
 	@Override

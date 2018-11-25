@@ -11,11 +11,14 @@ import javax.ejb.Local;
 import javax.enterprise.inject.Any;
 import javax.json.JsonObject;
 
+import org.json.JSONObject;
+
 import tn.esprit.pi.epione.persistence.Admin;
 import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
+import tn.esprit.pi.epione.persistence.Planning;
 import tn.esprit.pi.epione.persistence.Status;
 import tn.esprit.pi.epione.persistence.User;
 
@@ -30,6 +33,7 @@ public interface UserServiceLocal {
 	public Pattern findPatternById (int idPattern); //ok
 	public JsonObject modifyPeriodePattern(int idPattern, int periode); //ok
 	public JsonObject deletePattern(Pattern pattern);
+	public JsonObject enablePattern(Pattern pattern);
 	public Pattern findPatternByDescriptionAndDoctor (String pattern ,int idDoctor );
 	public List<Pattern> getListPatternByMedecin (int idDoctor);
 	public JsonObject modifyPatternDescription(int idPattern , String pattern);
@@ -44,6 +48,7 @@ public interface UserServiceLocal {
 	public JsonObject logOut (int idUser);
 	public Doctor getDoctorFromAppointment(int appointment);
 	public JsonObject treatAppointment(int appointment, Status newstate);
+	public JsonObject rejectAppointment(int appointment);
 	public JsonObject markAchievedAppointment(int appointment);
 	public List<Appointment> getListAppointmentNotTreated(int idDoctor);
 	public List<Appointment> getListAppointmentForSpecificDate( int idDoctor , Date startDate , Date endDate );
@@ -58,6 +63,8 @@ public interface UserServiceLocal {
 	public List<Doctor> getListDoctors();
 	public List<Appointment> selectAppointmentOfToday(int idDoctor);
 	public User findUserByUserName(String username);
-	
+	public JsonObject updatePattern(Pattern pattern);
+	public List<Pattern> getListPatternDisabledByMedecin(int idDoctor);
+	public List<Planning> getListePlanning(int idDoctor);
 
 }

@@ -203,7 +203,7 @@ public class AnalyticsClient {
 		if (!AnalyticsService.getPatientsbyAgeRange(age1, age2).isEmpty()) {
 			return Response.ok(AnalyticsService.getPatientsbyAgeRange(age1, age2)).build();
 		} else {
-			return Response.ok("Il n'existe pas de patient dans cette tranche d'age").build();
+			return Response.ok(null).build();
 		}
 
 	}

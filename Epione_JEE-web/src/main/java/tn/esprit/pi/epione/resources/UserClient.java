@@ -58,7 +58,7 @@ public class UserClient {
 			} else {
 				jsonObject = jsonObjectToBuilder(jsonObject)
 						.add("token", generateToken.issueToken(user.getUsername())).build();
-				System.out.println("*************"+userManager.getUserByUserName(user.getUsername())+"------------");
+				System.out.println("*************"+user1.getType()+"------------");
 				
 				jsonObject = jsonObjectToBuilder(jsonObject).add("type", user1.getType()).build();
 				Connected_User.setUser(user); // get the connected user

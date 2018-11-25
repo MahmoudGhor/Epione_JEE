@@ -7,6 +7,7 @@ import javax.ejb.Local;
 import javax.json.JsonObject;
 
 import tn.esprit.pi.epione.persistence.Appointment;
+import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Notification;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Recommandation;
@@ -32,6 +33,9 @@ public interface PathServiceLocal {
 			 public JsonObject UpdateRecommandation(int recommandation,int specialist,String type,String justification,int newspecialist);
 			 public List<Patient> ListAllPatientsForSpecialist(int specialist);
 			  public JsonObject addNotificationToClient(int recommandation,int specialist);
+			  public Patient getPatientFromRecommandation(int recommandation);
+			  public Doctor getDoctorFromRecommandation(int recommandation);
+			  public Doctor getRecommandedDoctorFromRecommandation(int recommandation);
 			  
 			  
 }

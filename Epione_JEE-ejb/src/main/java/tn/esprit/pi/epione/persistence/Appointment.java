@@ -35,17 +35,17 @@ public class Appointment {
 	private Medical_Prescription medical_Prescription;
 
 	
-	@JsonIgnore
+	
 	@ManyToOne(fetch= FetchType.EAGER)
 	private Doctor doctor;
-	@JsonIgnore
+	
 	@ManyToOne(fetch= FetchType.EAGER)
 	private Patient patient;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="appointment")
 	private List<Recommandation> recommandations;
-	@JsonIgnore
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Pattern pattern;
 	@JsonIgnore

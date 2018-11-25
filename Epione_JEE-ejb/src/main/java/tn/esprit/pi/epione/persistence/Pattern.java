@@ -15,7 +15,7 @@ public class Pattern {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	private float price;
+	private int price;
 	private String label;
 	private int periode;
 	@JsonIgnore
@@ -28,10 +28,10 @@ public class Pattern {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public float getPrice() {
+	public int getPrice() {
 		return price;
 	}
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 	public String getLabel() {
@@ -58,7 +58,7 @@ public class Pattern {
 	public void setActif(boolean isActif) {
 		this.isActif = isActif;
 	}
-	public Pattern(float price, String label, int periode, Doctor doctor) {
+	public Pattern(int price, String label, int periode, Doctor doctor) {
 		super();
 		this.price = price;
 		this.label = label;

@@ -21,6 +21,7 @@ import tn.esprit.pi.epione.filters.Secured;
 import tn.esprit.pi.epione.iservices.PathServiceLocal;
 import tn.esprit.pi.epione.iservices.UserServiceLocal;
 import tn.esprit.pi.epione.persistence.Appointment;
+import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Notification;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Recommandation;
@@ -399,7 +400,54 @@ public class PathClient {
 	}
 	
 	
-
+	/*************************** find user By id **************************************************/
+	@Path("/getPatientFromRecommandation")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatientFromRecommandation(@QueryParam("recommandation") int recommandation)
+	{
+		
+		Patient p =  pathmanage.getPatientFromRecommandation(recommandation);
+		
+		p.setAppointments(null);
+		p.setNotifications(null);
+		p.setListPatterns(null);
+       		
+		return Response.ok(p).build();
+	}
+	
+	/*************************** find user By id **************************************************/
+	@Path("/getDoctorFromRecommandation")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDoctorFromRecommandation(@QueryParam("recommandation") int recommandation)
+	{
+		
+		Doctor p =  pathmanage.getDoctorFromRecommandation(recommandation);
+		
+		p.setAppointments(null);
+		p.setListPatterns(null);
+		p.setPatterns(null);
+       		
+		return Response.ok(p).build();
+	}
+	
+	
+	/*************************** find user By id **************************************************/
+	@Path("/getRecommandedDoctorFromRecommandation")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRecommandedDoctorFromRecommandation(@QueryParam("recommandation") int recommandation)
+	{
+		
+		Doctor p =  pathmanage.getRecommandedDoctorFromRecommandation(recommandation);
+		
+		p.setAppointments(null);
+		p.setListPatterns(null);
+		p.setPatterns(null);
+       		
+		return Response.ok(p).build();
+	}
 	
 	
 }
