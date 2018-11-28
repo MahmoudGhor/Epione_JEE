@@ -29,6 +29,7 @@ public class Appointment {
 	private Date date;
 	@Enumerated(EnumType.STRING)
 	private Status status;
+	private boolean rated;
 	private String description;
 	@JsonIgnore
 	@OneToOne(fetch= FetchType.EAGER)
@@ -113,6 +114,12 @@ public class Appointment {
 	}
 	public void setPlanning(Planning planning) {
 		this.planning = planning;
+	}
+	public boolean isRated() {
+		return rated;
+	}
+	public void setRated(boolean rated) {
+		this.rated = rated;
 	}
 	
 	

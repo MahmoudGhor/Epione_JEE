@@ -11,7 +11,9 @@ import javax.persistence.TypedQuery;
 
 import tn.esprit.pi.epione.iservices.RateServiceLocal;
 import tn.esprit.pi.epione.persistence.Appointment;
+import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Rating;
+import tn.esprit.pi.epione.persistence.User;
 
 @Stateless
 public class RateService implements RateServiceLocal {
@@ -27,6 +29,7 @@ public class RateService implements RateServiceLocal {
 		em.persist(r);
 		r.setCreated_at(new Date());
 		Appointment app = em.find(Appointment.class, AppId);
+		app.setRated(true);
 		System.out.println(app.getId());
 		r.setAppointment(app);
 		return r;
@@ -88,6 +91,25 @@ public class RateService implements RateServiceLocal {
 		double avg = (TotalRate/nbrDoc.getSingleResult());
 		
 		return avg;
+	}
+
+	@Override
+	public Doctor GetDoctorApp(int app) {
+		
+		Appointment a = em.find(Appointment.class, app);
+		return em.createQuery("SELECT r FROM Doctor r WHERE r.id="+a.getDoctor().getId(), Doctor.class).getSingleResult();
+	}
+
+	@Override
+	public List<Appointment> GetListApp(int id) {
+		TypedQuery<Appointment> query = em.createQuery("SELECT r FROM Appointment r where r.patient.id="+id+"and r.status='achieved'", Appointment.class);
+		return query.getResultList();
+	}
+	
+	@Override
+	public List<Appointment> GetListAppr(int id) {
+		TypedQuery<Appointment> query = em.createQuery("SELECT r FROM Appointment r where r.rated=false and r.patient.id="+id+"and r.status='achieved'", Appointment.class);
+		return query.getResultList();
 	}
 
 }

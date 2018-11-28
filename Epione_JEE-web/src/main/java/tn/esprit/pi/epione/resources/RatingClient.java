@@ -80,5 +80,25 @@ public class RatingClient {
 	public Response DoctorRate(@PathParam("doctorId") int doctorId){
 		return Response.ok(rateManager.DoctorRate(doctorId)).build();
 	}
+	
+	@Path("getdocapp/{app}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response GetDoctorApp(@PathParam("app") int app){
+		return Response.ok(rateManager.GetDoctorApp(app)).build();
+	}
+	
+	@Path("lisapp/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response GetListApp(@PathParam("id") int id){
+		return Response.ok(rateManager.GetListApp(id)).build();
+	}
+	@Path("lisappr/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response GetListAppr(@PathParam("id") int id){
+		return Response.ok(rateManager.GetListAppr(id)).build();
+	}
 
 }
