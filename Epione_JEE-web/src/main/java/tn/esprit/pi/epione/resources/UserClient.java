@@ -129,5 +129,13 @@ public class UserClient {
 	{
 		return Response.ok(userManager.getUserByUserName(username)).build();
 	}
+	/*************************** find user By id **************************************************/
+	@Path("/getUserID/{userId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserByUserName(@PathParam("userId")int useriD)
+	{
+		return Response.ok(userManager.getUserByid(useriD)).build();
+	}
 
 }
