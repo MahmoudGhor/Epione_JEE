@@ -66,5 +66,6 @@ public interface UserServiceLocal {
 	public JsonObject updatePattern(Pattern pattern);
 	public List<Pattern> getListPatternDisabledByMedecin(int idDoctor);
 	public List<Planning> getListePlanning(int idDoctor);
+	public List<Patient> getListPatientByDoctor(int idDoctor);
 
 }

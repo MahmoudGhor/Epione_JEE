@@ -62,6 +62,8 @@ import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.Events;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1194,6 +1196,27 @@ public List<Planning> getListePlanning(int idDoctor) {
 }
 
 
+
+
+
+
+/************************************* get list patient of doctor ***************************************/
+
+	@Override
+	public List<Patient> getListPatientByDoctor(int idDoctor) {
+		List<Integer> idPatients = new ArrayList<>();
+		List<Patient> listPatient = new ArrayList<>();
+		TypedQuery<Integer> query = em.createQuery("select distinct c.patient.id from Appointment c where c.doctor.id =  ?1  and c.status = ?2 ", Integer.class);
+		query.setParameter(1, idDoctor);
+		query.setParameter(2, Status.confirmed);
+		idPatients = query.getResultList();
+		for (int i = 0; i < idPatients.size(); i++) {
+			listPatient.add(em.find(Patient.class, idPatients.get(i)));
+			
+		}
+		return listPatient;
+		
+	}
 	
 	
 	

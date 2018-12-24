@@ -47,6 +47,16 @@ public class PatientClient {
 		return Response.ok(userManager.enableUser(username , token)).build();
 	}
 	
+	/******************* get info patient *****************************************/
+	@Path("/getPatientById/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatientById(@PathParam("id") int id)
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.findPatientById(id)).build();
+	}
+	
 	
 	
 

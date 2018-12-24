@@ -474,6 +474,16 @@ public class MedecinClient {
 		return Response.ok(userManager.getListePlanning(id)).build();
 	}
 	
+	/******************* get patients of doctor *****************************************/
+	@Path("/getPatientsByDoctorId/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatientByDoctorId(@PathParam("id") int id)
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getListPatientByDoctor(id)).build();
+	}
+	
 	
 	
 
