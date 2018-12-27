@@ -138,4 +138,12 @@ public class UserClient {
 		return Response.ok(userManager.getUserByid(useriD)).build();
 	}
 
+	/***************************** get current date *****************************************/
+	@Path("/getCurrentDate")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCurrentDate()
+	{
+		return Response.ok().entity(userManager.getCurrentDate()).build();
+	}
 }

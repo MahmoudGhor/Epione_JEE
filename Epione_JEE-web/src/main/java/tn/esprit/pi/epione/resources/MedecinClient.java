@@ -484,6 +484,34 @@ public class MedecinClient {
 		return Response.ok(userManager.getListPatientByDoctor(id)).build();
 	}
 	
+	/******************* get non working time 
+	 * @throws ParseException *****************************************/
+	@Path("/getListDayNoWorking/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getListDayNoWorking(@PathParam("id") int id) throws ParseException
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getListDayNoWorking(id)).build();
+	}
+	
+	/******************* get patients of doctor *****************************************/
+	@Path("/getPlanByDay/{id}/{year}/{month}/{day}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatientByDoctorId(@PathParam("id") int id , @PathParam("year") String year,
+			@PathParam("month") String month, 
+			@PathParam("day") String day)
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getPlanningOfday(id, year , month , day)).build();
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 

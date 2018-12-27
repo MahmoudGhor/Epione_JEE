@@ -6,7 +6,9 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Collections;
@@ -62,6 +64,8 @@ import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.Events;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -774,7 +778,7 @@ public class UserService implements UserServiceLocal {
 		if (em.find(Doctor.class, doctor.getId()) != null) {
 			if (em.find(Doctor.class, doctor.getId()).isActive() == true) {
 				if (em.find(Doctor.class, doctor.getId()).getConnected() == true) {
-
+					
 					Doctor d = em.find(Doctor.class, doctor.getId());
 					if (doctor.getFirstname() != null)
 						d.setFirstname(doctor.getFirstname());
@@ -1217,7 +1221,83 @@ public List<Planning> getListePlanning(int idDoctor) {
 		return listPatient;
 		
 	}
+
+
+
+@Override
+public List<String> getListDayNoWorking(int idDoctor) {
+	List<String> listDate = new ArrayList<>();
+	TypedQuery<Date> query = em.createQuery("select  c.day from Planning c where c.doctor.id =  ?1  and c.workings = ?2 ", Date.class);
+	query.setParameter(1, idDoctor);
+	query.setParameter(2, false);
+	String formatteddate;
+	int numMonth = 0;
+	String a= "08";
+	String b= "09";
+	for(int i=0 ; i<query.getResultList().size();i++)
+	{	
+		if (query.getResultList().get(i).getMonth()==0) numMonth=01;
+		if (query.getResultList().get(i).getMonth()==1) numMonth=02;
+		if (query.getResultList().get(i).getMonth()==2) numMonth=03;
+		if (query.getResultList().get(i).getMonth()==3) numMonth=04;
+		if (query.getResultList().get(i).getMonth()==4) numMonth=05;
+		if (query.getResultList().get(i).getMonth()==5) numMonth=06;
+		if (query.getResultList().get(i).getMonth()==6) numMonth=07;
+		if (query.getResultList().get(i).getMonth()==7) numMonth=Integer.parseInt(a);
+		if (query.getResultList().get(i).getMonth()==8) numMonth=Integer.parseInt(b);
+		if (query.getResultList().get(i).getMonth()==9) numMonth=10;
+		if (query.getResultList().get(i).getMonth()==10) numMonth=11;
+		if (query.getResultList().get(i).getMonth()==11) numMonth=12;
+		 formatteddate= (query.getResultList().get(i).getYear()+1900)+"/"+numMonth+"/"+query.getResultList().get(i).getDate();
+		listDate.add(formatteddate);
+	}
+	return listDate;
+}
+
+
+
+@Override
+public String getCurrentDate() {
+	Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+	LocalDate localDate = LocalDate.now();
+	return gson.toJson((dtf.format(localDate).toString())); 
+}
+
+
+
+@Override
+public List<Planning> getPlanningOfday(int idDoctor, String year, String month, String day) {
+	Date formatteddate;
+	String dat1 = year+"/"+month+"/"+day;
+	 DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+	 try {
+		Date d1 = df.parse(dat1);
+		System.out.println("*******************");
+		System.out.println(d1);
+		//System.out.println(formatteddate);
+		System.out.println(idDoctor);
+		TypedQuery<Planning> query = em.createQuery("select  c  from Planning c where c.doctor.id =  ?1  and c.workings = ?2 and c.day = ?3 ", Planning.class);
+		query.setParameter(1, idDoctor);
+		query.setParameter(2, true);
+		query.setParameter(3, d1);
+		return query.getResultList();
+		
+	 } catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+	//formatteddate= year+"-"+month+"-"+day;
+
 	
+}
+
+
+
+
+	
+
 	
 	
 	

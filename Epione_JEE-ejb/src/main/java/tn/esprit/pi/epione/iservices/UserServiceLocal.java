@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -67,5 +68,7 @@ public interface UserServiceLocal {
 	public List<Pattern> getListPatternDisabledByMedecin(int idDoctor);
 	public List<Planning> getListePlanning(int idDoctor);
 	public List<Patient> getListPatientByDoctor(int idDoctor);
-
+	public List<String> getListDayNoWorking(int idDoctor);
+	public String getCurrentDate();
+	public List<Planning> getPlanningOfday(int idDoctor , String year , String month , String day);
 }

@@ -24,6 +24,7 @@ public class Planning {
 	@Temporal(TemporalType.DATE)
 	private Date day;
 	private boolean disponibility;
+	private boolean workings;
 	@ManyToOne
 	private Doctor doctor;
 	@OneToOne(mappedBy="planning")
@@ -71,6 +72,13 @@ public class Planning {
 	public void setAppointment(Appointment appointment) {
 		this.appointment = appointment;
 	}
+	public boolean isWorkings() {
+		return workings;
+	}
+	public void setWorkings(boolean workings) {
+		this.workings = workings;
+	}
+	
 	
 	
 	
