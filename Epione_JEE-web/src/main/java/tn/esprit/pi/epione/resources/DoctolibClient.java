@@ -1,6 +1,7 @@
 package tn.esprit.pi.epione.resources;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -15,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import tn.esprit.pi.epione.filters.Secured;
 import tn.esprit.pi.epione.iservices.DoctolibServiceLocal;
@@ -52,8 +54,17 @@ public class DoctolibClient {
 	@Path("/getJson")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getDoctorsbySpeciality(@QueryParam("path") String path,@QueryParam("page") String page) {
+	public Response getDoctorsbySpeciality(@QueryParam("path") String path,@QueryParam("page") String page) {
+		String myString =D.getFromJson(path,page);
+		byte ptext[];
+		try {
+			ptext = myString.getBytes("ISO-8859-1");
+			String value = new String(ptext, "UTF-8"); 
+			return Response.ok(value).header("Content-Type", "application/json;charset=UTF-8").build();
 
-		return D.getFromJson(path,page);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			return Response.ok(D.getFromJson(path,page)).header("Access-Control-Allow-Origin", "*").header("Content-Type", "application/json;charset=UTF-8").build();
+		} 
 	}
 }
