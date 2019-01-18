@@ -17,9 +17,13 @@ import org.json.JSONObject;
 import tn.esprit.pi.epione.persistence.Admin;
 import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
+import tn.esprit.pi.epione.persistence.MedicalFile;
+import tn.esprit.pi.epione.persistence.Medical_Prescription;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
 import tn.esprit.pi.epione.persistence.Planning;
+import tn.esprit.pi.epione.persistence.Prescription;
+import tn.esprit.pi.epione.persistence.Review;
 import tn.esprit.pi.epione.persistence.Status;
 import tn.esprit.pi.epione.persistence.User;
 
@@ -71,4 +75,17 @@ public interface UserServiceLocal {
 	public List<String> getListDayNoWorking(int idDoctor);
 	public String getCurrentDate();
 	public List<Planning> getPlanningOfday(int idDoctor , String year , String month , String day);
+	public Appointment getAppointmentByIdPlanning(int idPlanning);
+	public Patient getPatientById(int idPatient);
+	public Review getReviewOfPatient(int idDoctor , int idPatient);
+	public JsonObject addReview(int idDoctor, int idPatient , String description);
+	public JsonObject updateReview(int id , String description);
+	public List<MedicalFile> getMedicalFilsOfPatient(int idDoctor , int idPatient);
+	public JsonObject addMedicalFils(int idDoctor , int idPatient , String description , int idAppointment);
+	public JsonObject addPrescription(String medicament,  int quantite , int idAppointment);
+	public List<Medical_Prescription> getAllMedicalPrescription();
+	public JsonObject addNotWorkingDays(int idDoctor , String year , String month , String day );
+	public JsonObject addWorkingDays(int idDoctor , String year , String month , String day , String hours , String minutes , String seconds );
+	public List<Prescription> getListPrescriptionByAppointment();
+	public Date selectMaxDay (int idDoctor);
 }

@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import tn.esprit.pi.epione.persistence.Admin;
 import tn.esprit.pi.epione.persistence.Doctor;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
+import tn.esprit.pi.epione.persistence.Review;
 import tn.esprit.pi.epione.persistence.Speciality;
 import tn.esprit.pi.epione.persistence.User;
 import java.io.IOException;
@@ -508,8 +510,159 @@ public class MedecinClient {
 	}
 	
 	
+	/************* getAppointmentByIdPlanning ***************************/
+	@Path("/getAppointmentByIdPlanning/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAppointmentByIdPlanning(@PathParam("id") int id) throws ParseException
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getAppointmentByIdPlanning(id)).build();
+	}
+	
+	/************* getPatientById ***************************/
+	@Path("/getPatientById/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatientById(@PathParam("id") int id) throws ParseException
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getPatientById(id)).build();
+	}
+	/************* getReview ***************************/
+	@Path("/getReview/{idDoctor}/{idPatient}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPatientById(@PathParam("idDoctor") int idDoctor, @PathParam("idPatient") int idPatient) throws ParseException
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getReviewOfPatient(idDoctor, idPatient)).build();
+	}
+	/******************************  add review ******************************************/
+	@Path("/addReview")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addReview(Map<String, String>map)
+	{
+		return Response.ok(userManager.addReview(Integer.parseInt(map.get("idDoctor")), Integer.parseInt(map.get("idPatient")), map.get("description"))).build();	
+	}
+	/******************************  update review ******************************************/
+	@Path("/updateReview")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateReview(Map<String, String>map)
+	{
+		return Response.ok(userManager.updateReview(Integer.parseInt(map.get("id")),  map.get("description"))).build();	
+	}
+	/******************************  update medicalFile ******************************************/
+	@Path("/addMedicalFile")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response AddMedicalFile(Map<String, String>map)
+	{
+		return Response.ok(userManager.addMedicalFils(Integer.parseInt(map.get("idDoctor")), Integer.parseInt(map.get("idPatient")), map.get("description") , Integer.parseInt(map.get("idAppointment")))).build();	
+	}
+	/************* getReview ***************************/
+	@Path("/getMedicalFile/{idDoctor}/{idPatient}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMedicalPath(@PathParam("idDoctor") int idDoctor, @PathParam("idPatient") int idPatient) throws ParseException
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getMedicalFilsOfPatient(idDoctor, idPatient)).build();
+	}
+	
+	/******************************  addPrescription  ******************************************/
+	@Path("/addPrescription")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addPrescription(Map<String, String>map)
+	{
+		return Response.ok(userManager.addPrescription(map.get("medicament"), Integer.parseInt(map.get("quantite")) , Integer.parseInt(map.get("idAppointment")))).build();	
+	}
+	
+	/************* getAllMedicalPrescription ***************************/
+	@Path("/getAllMedicalPrescription")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllMedicalPrescription() 
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getAllMedicalPrescription()).build();
+	}
+	
+	/******************************  add no working days  ******************************************/
+	@Path("/addNoWorkingDays")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addNoWorkingDays(Map<String, String>map)
+	{
+		return Response.ok(userManager.addNotWorkingDays(Integer.parseInt(map.get("idDoctor")), map.get("year"), map.get("month"), map.get("day"))).build();	
+	}
+	/******************************  add no working days  ******************************************/
+	@Path("/addWorkingDays")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addWorkingDays(Map<String, String>map)
+	{
+		Map<String, String> m = new HashMap<>();
+		Date formatteddate;
+		String dat1 = map.get("day")+"-"+map.get("month")+"-"+map.get("year");
+		//String time1 = map.get("hoursStart")+":"+map.get("minutesStart")+":"+map.get("secondsStart");
+		//String time2 = map.get("hoursEnd")+":"+map.get("minutesEnd")+":"+map.get("secondsEnd");
+		 DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		 DateFormat df2 = new SimpleDateFormat("hh:mm:ss");
+		 try {
+			Date d1 = df.parse(dat1);
+			Date startTime = df.parse(dat1);
+			Date endTime = df.parse(dat1);
+			startTime.setHours(Integer.parseInt(map.get("hoursStart")));
+			startTime.setMinutes(Integer.parseInt(map.get("minutesStart")));
+			startTime.setSeconds(Integer.parseInt(map.get("secondsStart")));
+			endTime.setHours(Integer.parseInt(map.get("hoursEnd")));
+			endTime.setMinutes(Integer.parseInt(map.get("minutesEnd")));
+			endTime.setSeconds(Integer.parseInt(map.get("secondsEnd")));
+			//Date d2 = df.parse(time1);
+			//Date d3 = df.parse(time2);
+			//Timestamp t = new Timestamp(d2.getTime());
+			//Timestamp t2 = new Timestamp(d3.getTime());
+			System.out.println("*******************");
+			System.out.println(d1);
+			//System.out.println(formatteddate);
+			String tt1 = (map.get("hoursStart"))+":"+(map.get("minutesStart"))+":"+(map.get("secondsStart"));
+			String tt2 = (map.get("hoursEnd"))+":"+(map.get("minutesEnd"))+":"+(map.get("secondsEnd"));
+			m.put("day", dat1);
+			m.put("startDate", tt1 );
+			m.put("endDate", tt2);
+			m.put("timeMeeting", "30");
+			m.put("idDoctor", map.get("idDoctor"));
+			return addPlanningForOneDay(m);
+		 } catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/************* getPrescriptionByAppointment ***************************/
+	@Path("/getPrescriptionByAppointment")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPrescriptionByAppointment() 
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.getListPrescriptionByAppointment()).build();
+	}
 	
 	
+	/******************* get patients of doctor *****************************************/
+	@Path("/getMaxDate/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMaxDate(@PathParam("id") int id)
+	{
+		System.out.println("wsel lehné");
+		return Response.ok(userManager.selectMaxDay(id)).build();
+	}
 	
 	
 	

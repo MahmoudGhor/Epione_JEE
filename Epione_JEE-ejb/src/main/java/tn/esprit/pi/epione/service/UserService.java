@@ -37,9 +37,13 @@ import tn.esprit.pi.epione.iservices.UserServiceLocal;
 import tn.esprit.pi.epione.persistence.Admin;
 import tn.esprit.pi.epione.persistence.Appointment;
 import tn.esprit.pi.epione.persistence.Doctor;
+import tn.esprit.pi.epione.persistence.MedicalFile;
+import tn.esprit.pi.epione.persistence.Medical_Prescription;
 import tn.esprit.pi.epione.persistence.Patient;
 import tn.esprit.pi.epione.persistence.Pattern;
 import tn.esprit.pi.epione.persistence.Planning;
+import tn.esprit.pi.epione.persistence.Prescription;
+import tn.esprit.pi.epione.persistence.Review;
 import tn.esprit.pi.epione.persistence.Speciality;
 import tn.esprit.pi.epione.persistence.Status;
 import tn.esprit.pi.epione.persistence.User;
@@ -843,6 +847,7 @@ public class UserService implements UserServiceLocal {
 				Doctor doc = em.find(Doctor.class, idDoctor);
 				if (doc.isActive() == true) {
 					if (day != null) {
+						if (verifyDay(day)){
 						System.out.println("bbbbbbbbbbbbbbbbbb");
 						System.out.println(startTime);
 						System.out.println(endTime);
@@ -853,10 +858,15 @@ public class UserService implements UserServiceLocal {
 						plan.setEnd_at(endTime);
 						plan.setDisponibility(false);
 						plan.setDoctor(doc);
+						plan.setWorkings(true);
 
 						em.persist(plan);
 						return Json.createObjectBuilder().add("succes", "your planning has been added successfully")
 								.build();
+						}
+						{
+							return null;
+						}
 					} else {
 						return Json.createObjectBuilder().add("error", "specify the day please!").build();
 					}
@@ -1210,9 +1220,10 @@ public List<Planning> getListePlanning(int idDoctor) {
 	public List<Patient> getListPatientByDoctor(int idDoctor) {
 		List<Integer> idPatients = new ArrayList<>();
 		List<Patient> listPatient = new ArrayList<>();
-		TypedQuery<Integer> query = em.createQuery("select distinct c.patient.id from Appointment c where c.doctor.id =  ?1  and c.status = ?2 ", Integer.class);
+		TypedQuery<Integer> query = em.createQuery("select distinct c.patient.id from Appointment c where c.doctor.id =  ?1  and c.status = ?2 or c.status =?3 ", Integer.class);
 		query.setParameter(1, idDoctor);
 		query.setParameter(2, Status.confirmed);
+		query.setParameter(3, Status.achieved);
 		idPatients = query.getResultList();
 		for (int i = 0; i < idPatients.size(); i++) {
 			listPatient.add(em.find(Patient.class, idPatients.get(i)));
@@ -1292,6 +1303,232 @@ public List<Planning> getPlanningOfday(int idDoctor, String year, String month, 
 
 	
 }
+
+
+
+@Override
+public Appointment getAppointmentByIdPlanning(int idPlanning) {
+	TypedQuery<Appointment> query = em.createQuery("select  c  from Appointment c where c.planning.id =  ?1 ", Appointment.class);
+	query.setParameter(1, idPlanning);
+	return query.getSingleResult();
+	
+}
+
+
+
+@Override
+public Patient getPatientById(int idPatient) {
+	return em.find(Patient.class, idPatient);
+}
+
+
+
+@Override
+public Review getReviewOfPatient(int idDoctor, int idPatient) {
+	TypedQuery<Review> query = em.createQuery("select  c  from Review c where c.doctor.id =  ?1 and c.patient.id = ?2 ", Review.class);
+	query.setParameter(1, idDoctor);
+	query.setParameter(2, idPatient);
+	return query.getSingleResult();
+	
+}
+
+
+/******************** Add review       **********************/
+@Override
+public JsonObject addReview(int idDoctor, int idPatient , String description) {
+	Review r = new Review();
+	r.setDoctor(em.find(Doctor.class, idDoctor));
+	r.setPatient(em.find(Patient.class, idPatient));
+	r.setDescription(description);
+	em.persist(r);
+	return Json.createObjectBuilder().add("succes", "Review added").build();
+
+}
+
+
+/************ Remove review *********************************/
+	@Override
+	public JsonObject updateReview(int id, String description) {
+		Review r = em.find(Review.class, id);
+		r.setDescription(description);
+		em.persist(r);
+		return Json.createObjectBuilder().add("succes", "Review updated").build();
+
+	}
+
+
+
+@Override
+public List<MedicalFile> getMedicalFilsOfPatient(int idDoctor, int idPatient) {
+	TypedQuery<MedicalFile> query = em.createQuery("select c from MedicalFile c where c.doctor.id =  ?1  and c.patient.id = ?2 order by c.day ", MedicalFile.class);
+	query.setParameter(1, idDoctor);
+	query.setParameter(2, idPatient);
+	return query.getResultList();
+}
+
+
+
+@Override
+public JsonObject addMedicalFils(int idDoctor, int idPatient, String description , int idAppointment) {
+	MedicalFile medical = new MedicalFile();
+	medical.setDay(new Date());
+	medical.setPatient(em.find(Patient.class, idPatient));
+	medical.setDoctor(em.find(Doctor.class, idDoctor));
+	medical.setDescription(description);
+	medical.setAppointment(em.find(Appointment.class, idAppointment));
+	em.persist(medical);
+	return Json.createObjectBuilder().add("succes", "Medical Fils added").build();
+	
+}
+
+public boolean verifyPrescription(String medicament)
+{	
+	TypedQuery<Medical_Prescription> query = em.createQuery("select  c  from Medical_Prescription c where c.description =  ?1", Medical_Prescription.class);
+	query.setParameter(1, medicament);
+	System.out.println("************bish yodkhel lel if*******************");
+	if (query.getResultList().isEmpty() )
+	{
+		System.out.println("---------- dkhal lel if -------------");
+		Medical_Prescription med = new Medical_Prescription();
+		med.setDescription(medicament);
+		em.persist(med);
+		return true;
+	}
+	return false;
+	
+}
+
+@Override
+public JsonObject addPrescription(String medicament , int quantite, int idAppointment) {
+	if (verifyPrescription(medicament)==false)
+	{
+		Medical_Prescription med = new Medical_Prescription();
+		Prescription presc = new Prescription();
+		TypedQuery<Medical_Prescription> query = em.createQuery("select  c  from Medical_Prescription c where c.description =  ?1", Medical_Prescription.class);
+		query.setParameter(1, medicament);
+		med = query.getSingleResult();
+		presc.setMedicalPrescription(med);
+		presc.setAppointment(em.find(Appointment.class, idAppointment));
+		presc.setQuantite(quantite);
+		em.persist(presc);
+		return Json.createObjectBuilder().add("succes", "Medical prescription added").build();
+			
+	}
+	else
+	{
+		verifyPrescription(medicament);
+		Medical_Prescription med = new Medical_Prescription();
+		Prescription presc = new Prescription();
+		TypedQuery<Medical_Prescription> query = em.createQuery("select  c  from Medical_Prescription c where c.description =  ?1", Medical_Prescription.class);
+		query.setParameter(1, medicament);
+		med = query.getSingleResult();
+		presc.setMedicalPrescription(med);
+		presc.setAppointment(em.find(Appointment.class, idAppointment));
+		presc.setQuantite(quantite);
+		em.persist(presc);
+		return Json.createObjectBuilder().add("succes", "Medical prescription added").build();
+			
+	}
+}
+
+
+	@Override
+	public List<Medical_Prescription> getAllMedicalPrescription() {
+		TypedQuery<Medical_Prescription> query = em.createQuery("select  c  from Medical_Prescription c ", Medical_Prescription.class);
+		return query.getResultList();
+
+	}
+
+
+
+	@Override
+	public JsonObject addNotWorkingDays(int idDoctor, String year, String month, String day) {
+		Date formatteddate;
+		String dat1 = year+"-"+month+"-"+day;
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		 try {
+			Date d1 = df.parse(dat1);
+			if (verifyDay(d1)){
+			System.out.println("*******************");
+			System.out.println(d1);
+			//System.out.println(formatteddate);
+			Planning plan = new Planning();
+			plan.setDoctor(em.find(Doctor.class, idDoctor));
+			plan.setDay(d1);
+			plan.setWorkings(false);
+			em.persist(plan);
+			return Json.createObjectBuilder().add("succes", "Not working added").build();
+			}else{
+				return null;
+			}
+		 } catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	public boolean verifyDay(Date d){
+		TypedQuery<Planning> query = em.createQuery("select  c  from Planning c where c.day =  ?1", Planning.class);
+		query.setParameter(1, d);
+		if (query.getResultList().isEmpty())
+		{
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+
+	@Override
+	public JsonObject addWorkingDays(int idDoctor, String year, String month, String day ,String hours , String minutes , String seconds) {
+		Date formatteddate;
+		String dat1 = year+"-"+month+"-"+day;
+		String time1 = hours+":"+minutes+":"+seconds;
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		 DateFormat df2 = new SimpleDateFormat("hh:mm:ss");
+		 try {
+			Date d1 = df.parse(dat1);
+			if (verifyDay(d1))
+			{
+			Date d2 = df.parse(time1);
+			Timestamp t = new Timestamp(d2.getTime());
+			System.out.println("*******************");
+			System.out.println(d1);
+			//System.out.println(formatteddate);
+			Planning plan = new Planning();
+			plan.setDoctor(em.find(Doctor.class, idDoctor));
+			plan.setDay(d1);
+			plan.setWorkings(true);
+			em.persist(plan);
+			return Json.createObjectBuilder().add("succes", "Not working added").build();
+			}
+			else {
+				return null;
+			}
+		 } catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+
+	@Override
+	public List<Prescription> getListPrescriptionByAppointment() {
+		TypedQuery<Prescription> query = em.createQuery("select  c  from Prescription c ", Prescription.class);
+		return query.getResultList();
+		
+	}
+
+
+
+	@Override
+	public Date selectMaxDay(int idDoctor) {
+		TypedQuery<Date> query = em.createQuery("select max(c.day)   from Planning c where  c.doctor.id = ?1 ", Date.class);
+		query.setParameter(1, idDoctor);
+		return query.getSingleResult();
+	}
 
 
 

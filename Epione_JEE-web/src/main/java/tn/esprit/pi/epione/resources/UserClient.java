@@ -146,4 +146,6 @@ public class UserClient {
 	{
 		return Response.ok().entity(userManager.getCurrentDate()).build();
 	}
+	
+	
 }
